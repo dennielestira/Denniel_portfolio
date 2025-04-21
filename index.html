@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="script.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<script type="text/javascript">
+  // Init using the correct public key
+  emailjs.init("gaj-OdPTe-ulTJO8L");
+
+  function sendMail() {
+    let parms = {
+      name : document.getElementById("name").value,
+      email : document.getElementById("email").value,
+      message : document.getElementById("message").value,
+    };
+
+    emailjs.send("service_tsf6byy", "template_zmj9gbu", parms)
+      .then(function(response) {
+        alert("Email sent successfully!");
+      }, function(error) {
+        alert("Failed to send email: " + JSON.stringify(error));
+        console.error("EmailJS Error:", error);
+      });
+  }
+</script>
+</head>
+<body>
+    <div class="header">
+        <a href="#" class="logo">Denniel.</a>
+        <div class="navbar">
+            <a href="#home">Home        </a>
+            <a href="#about">About      </a>
+            <a href="#skillsets">Skills     </a>
+            <a href="#pastproject">Projects     </a>
+            <a href="#contact">Contact      </a>
+        </div>
+        <!-- Burger Icon -->
+        <div class="burger" onclick="toggleMenu()">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+    
+     <section class="home" id="home">
+        <div class="home-content">
+            <h1>Hi, I'm Denniel M. Estira</h1>
+            <h3>An IT Student</h3>
+            <p>A third year student
+            </p>
+        </div>
+     </section>
+
+     <section class="about" id="about">
+        <div class="main">
+            <img src="./photos/me.jpg">
+            <div class="about-text">
+                <h2>About Me</h2>
+                <h5>IT STUDENT</h5>
+                <p>Hi i am Denniel M. Estira 21 years old, I am currently a third year student at Cvsu_Bacoor. 
+                    I am now practicing to code using html and css.
+                    I hope this activity will amaze you.
+                </p>
+                <h1>MY CONTACTS</h1>
+                <h3>GLOBE - 09270061285</h3>
+                <a href="https://www.facebook.com/profile.php?id=100009966038996"><i class='bx bxl-facebook'></i></a>
+                <a href="https://l.facebook.com/l.php?u=https%3A%2F%2Finstagram.com%2F_nielstr%3Figshid%3DOGQ5ZDc2ODk2ZA%253D%253D%26utm_source%3Dqr%26fbclid%3DIwAR2ahShAhCi6Lr_2NxIp60ZHTwkR9hIgO6ahrf17BzBJWh-U5qTwOoPOhZw&h=AT1Tu9r6pEIOpVoZ7YEu3_GK1QNU8t23VhqmPNiPO_oBNUrT2UlMCPlabIrtqLLCQXGTgJkVfwtqgRBV-gGnND9djZm5hJqg0J01pyKqwNCZuy-KgJ8UwdzQlRt8GF7Y4oVuag"><i class='bx bxl-instagram'></i></a>
+                <a href="https://l.facebook.com/l.php?u=https%3A%2F%2Fwww.tiktok.com%2F%40lf_kazaima%3F_t%3D8i3dXGULG7e%26_r%3D1%26fbclid%3DIwAR1GlV-PII92BSkoqq1raiJtZK3X5IL-OWVV1TWNa2jtXmUQMsWEHRXvRR8&h=AT1Tu9r6pEIOpVoZ7YEu3_GK1QNU8t23VhqmPNiPO_oBNUrT2UlMCPlabIrtqLLCQXGTgJkVfwtqgRBV-gGnND9djZm5hJqg0J01pyKqwNCZuy-KgJ8UwdzQlRt8GF7Y4oVuag"><i class='bx bxl-tiktok' ></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="skillset" id="skillsets">
+            <div class="main-skillset" id="skillset">
+            <h1>MY SKILL</h1>
+
+            <li><h3>HTML</h3>
+                <span class="bar"><span class="html"></span></span>
+            </li>
+
+            <li><h3>CSS</h3>
+                <span class="bar"><span class="css"></span></span>
+            </li>
+
+
+            <li><h3>PYTHON</h3>
+                <span class="bar"><span class="sql"></span></span>
+            </li>
+
+            <li><h3>JAVASCRIPT</h3>
+                <span class="bar"><span class="javascript"></span></span>
+            </li>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="pastproject" id="pastproject">
+            <h1>MY DJANGO PROJECT</h1>
+            <img src="./photos/pic.png">
+            <img src="./photos/pic1.png">
+        </div>
+    </section>
+    <section class="contact" id="contact">
+        <div class="contact-content">
+          <h1>Contact Me</h1>
+          <form id="contact-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+      
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+      
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+      
+            <button type="submit" class="submit-btn">Send</button>
+      
+          </form>
+        </div>
+      </section>
+    <script type="text/javascript">
+        document.getElementById("contact-form").addEventListener("submit", function(e) {
+          e.preventDefault(); // stops page reload
+        
+          let parms = {
+            name : document.getElementById("name").value,
+            email : document.getElementById("email").value,
+            message : document.getElementById("message").value,
+          }
+        
+          emailjs.send("service_tsf6byy", "template_zmj9gbu", parms)
+            .then(() => alert("Email sent successfully!"))
+            .catch((error) => alert("Failed to send email: " + JSON.stringify(error)));
+        });
+        document.getElementById("burger").addEventListener("click", function () {
+          document.getElementById("navLinks").classList.toggle("active");
+        });
+        
+        </script>
+</body>
+</html>

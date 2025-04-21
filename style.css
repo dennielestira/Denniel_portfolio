@@ -1,0 +1,680 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+body {
+    color: #ededed;
+}
+
+/* Basic Styling for the Navbar */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 10%;
+    background: transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    font-size: 18px;
+    color: #ededed;
+    text-decoration: none;
+    transition: .3s;
+}
+
+.navbar {
+    display: flex;
+    gap: 35px; /* Add spacing between links using 'gap' */
+}
+
+.navbar a {
+    font-size: 18px;
+    color: #ededed;
+    text-decoration: none;
+    font-weight: 500;
+    transition: .3s;
+}
+
+/* Optional: You can also make sure the first and last navbar links don't get extra space */
+.navbar a:first-child {
+    margin-left: 0; /* Removes left margin for first item */
+}
+
+.navbar a:last-child {
+    margin-right: 0; /* Removes right margin for last item */
+}
+
+/* Add hover effect */
+.navbar a:hover {
+    color: rgb(253, 86, 178);
+}
+
+/* Burger Menu */
+.burger {
+    display: none;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 30px;
+    height: 25px;
+    background: transparent; /* Make the background transparent */
+    border: none; /* Remove the border */
+    padding: 0;
+}
+
+.burger .bar {
+    background-color: #ededed;
+    width: 25px;  /* Adjust size of bars */
+    height: 3px;  /* Adjust thickness of bars */
+    border-radius: 5px;
+}
+
+/* Navbar Toggle when open */
+.navbar.open {
+    display: block;
+    position: absolute;
+    top: 60px;
+    right: 10%;
+    width: 90%;
+    background-color: #a4e9f5; /* This is already a red tone */
+    padding: 10px 0;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: rgba(226, 100, 100, 0.2);
+}
+
+
+/* Menu links in the opened navbar */
+.navbar.open a {
+    font-size: 20px;
+    margin: 10px 0; /* Reduce margin to make the links closer together */
+    color: #da1919;
+}
+
+/* Media Query to Show Burger Menu on Small Screens */
+@media (max-width: 768px) {
+    .navbar {
+        display: none;
+        width: 100%;
+    }
+
+    .burger {
+        display: flex;
+    }
+
+    .navbar.open {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        background-color: #c0e7fa; /* Ensure the background stays transparent when opened */
+        padding: 10px 0; /* Reduced padding here */
+    }
+
+    .navbar.open a {
+        font-size: 20px;
+        margin: 10px 0; /* Reduced space between links */
+    }
+}
+
+
+
+
+/* Logo */
+.logo {
+    position: relative;
+    font-size: 25px;
+    color: #ededed;
+    text-decoration: none;
+    font-weight: 600;
+    padding-left: 150px;
+}
+/* Home Section */
+.home {
+    height: 100vh;
+    background: url('./photos/my\ photo.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    padding: 0 10%;
+    overflow: hidden;
+}
+
+.home-content {
+    max-width: 1000px;
+    padding-top: 200px; /* Reduced from 550px */
+    padding-left: 180px;
+}
+
+
+.home-content h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: black;
+}
+
+.home-content h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+}
+
+.home-content p {
+    font-size: 16px;
+    color: black;
+}
+
+.home-sci {
+    position: absolute;
+    bottom: 40px;
+    width: 170px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.home-sci::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: #081b29;
+    animation: showRight 1s ease forwards;
+    animation-delay: 2.5s;
+    z-index: 2;
+}
+
+.home-sci a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 2px solid #00abf0;
+    border-radius: 50%;
+    font-size: 20px;
+    color: #00abf0;
+    text-decoration: none;
+    z-index: 1;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+.home-sci a:hover::before {
+    width: 100%;
+}
+
+.home-sci a:hover {
+    color: #081b29;
+}
+
+.home-imgHover:hover {
+    background: #081b29;
+    opacity: 0.8;
+}
+
+
+/* About Section */
+.about {
+    width: 100%;
+    height: auto;
+    padding: 100px 0;
+    background: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.about img {
+    width: 100%;
+    max-width: 500px; /* Ensure it doesn't exceed this width */
+    height: auto;
+    object-fit: contain; /* This ensures the image scales proportionally */
+}
+
+.about .gf img {
+    max-width: 100%; /* Prevent overflow and ensure the image scales */
+    height: auto;
+    padding-left: 0; /* Reset padding to avoid unnecessary spacing */
+}
+
+.about .gf p {
+    padding-left: 0; /* Reset padding */
+    width: 100%; /* Make sure text doesn't overflow */
+}
+
+.about-text {
+    width: 100%;
+    max-width: 550px;
+    text-align: center; /* Center-align text for small screens */
+    margin: 0 auto;
+}
+
+/* Make sure the text section doesn’t overlap the image */
+@media only screen and (max-width: 768px) {
+    .about .gf img {
+        padding-left: 0;
+        max-width: 80%; /* Limit image width on smaller screens */
+    }
+
+    .about-text {
+        width: 90%;
+    }
+
+    .about-text h2 {
+        font-size: 40px;
+    }
+
+    .about-text h5 {
+        font-size: 18px;
+    }
+
+    .about-text p {
+        font-size: 16px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .about .gf img {
+        max-width: 100%; /* Make the image fill up the container on small devices */
+    }
+
+    .about-text h2 {
+        font-size: 32px;
+    }
+
+    .about-text h5 {
+        font-size: 16px;
+    }
+
+    .about-text p {
+        font-size: 14px;
+    }
+}
+
+
+.main {
+    padding: 1px;
+    width: 1130px;
+    max-width: 95%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.about-text h2 {
+    color: pink;
+    font-size: 75px;
+    text-transform: capitalize;
+    margin-bottom: 20px;
+}
+
+.about-text h5 {
+    color: pink;
+    letter-spacing: 2px;
+    font-size: 22px;
+    margin-bottom: 25px;
+}
+
+.about-text p {
+    color: #fcfc;
+    letter-spacing: 1px;
+    line-height: 28px;
+    font-size: 18px;
+    margin-bottom: 45px;
+}
+
+.about-text h1 {
+    color: plum;
+    font-size: 25px;
+}
+
+.about-text a {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 2px solid #00abf0;
+    border-radius: 50%;
+    font-size: 20px;
+    color: #00abf0;
+    text-decoration: none;
+    z-index: 1;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+.about-text a:hover,
+.about-text a.hover {
+    color: blue;
+}
+
+/* Skillset Section */
+.skillset {
+    padding-top: 100px;
+    text-align: center;
+    width: 100%;
+    height: auto;
+    padding: 100px 0;
+    background: url('./photos/bg.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+    box-sizing: border-box;
+}
+
+.main-skillset h3 {
+    margin: 5px;
+}
+
+.main-skillset {
+    width: 100%;
+    max-width: 600px; /* Ensure it's contained within this width */
+    margin: 0 auto;
+    color: white;
+    padding: 0px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-skillset li {
+    margin: 20px 0;
+    padding: 10px;
+    width: 100%; /* Ensure each skill item takes up the full width */
+}
+
+.bar {
+    background: #081b29;
+    display: block;
+    height: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    width: 100%; /* Ensure the bar doesn't overflow the container */
+}
+
+.bar:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.bar span {
+    height: 20px;
+    float: left;
+    background: linear-gradient(135deg, rgba(236, 0, 140, 1) 0%, rgba(252, 103, 103, 1) 100%);
+}
+
+.html {
+    width: 50%;
+    animation: html 3s;
+}
+
+.css {
+    width: 40%;
+    animation: css 3s;
+}
+
+.sql {
+    width: 60%;
+    animation: python 3s;
+}
+
+.javascript {
+    width: 5%;
+    animation: javascript 3s;
+}
+
+@keyframes html {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 50%;
+    }
+}
+
+@keyframes css {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 40%;
+    }
+}
+
+@keyframes python {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 60%;
+    }
+}
+
+@keyframes javascript {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 5%;
+    }
+}
+
+/* Responsive Design for Skillset */
+@media only screen and (max-width: 768px) {
+    .main-skillset {
+        width: 90%; /* Ensure it doesn't overflow on medium screens */
+        margin: 0 auto;
+    }
+
+    .bar {
+        width: 100%; /* Make sure bars are fully contained */
+    }
+
+    .skillset {
+        padding: 80px 0; /* Reduce padding for smaller screens */
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .main-skillset {
+        width: 90%; /* Ensure skillset section is fully contained */
+        margin: 0 auto;
+    }
+
+    .bar {
+        width: 100%; /* Ensure bars stay within the container */
+    }
+
+    .skillset {
+        padding: 60px 0; /* Reduce padding on smaller screens */
+    }
+}
+
+
+/* Past Project Section */
+.pastproject {
+    width: 100%;
+    height: 900px;
+    padding: 50px 0;
+    background: #081b29;
+}
+
+.pastproject {
+    text-align: center;
+    font-size: 50px;
+    color: white;
+}
+
+.pastproject img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 700px;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 768px) {
+    .header {
+        padding: 20px 5%;
+    }
+
+    .logo {
+        padding-left: 30px;
+        font-size: 20px;
+    }
+
+    .home-content {
+        padding-top: 350px;
+        padding-left: 40px;
+    }
+
+    .home-content h1 {
+        font-size: 24px;
+    }
+
+    .home-content h3 {
+        font-size: 20px;
+    }
+
+    .home-sci {
+        bottom: 26px;
+    }
+
+    .about-text {
+        width: 100%;
+        text-align: center;
+    }
+
+    .main {
+        flex-direction: column;
+    }
+
+    .about img {
+        width: 100%;
+    }
+
+    .main-skillset {
+        width: 80%;
+    }
+
+    .pastproject img {
+        width: 90%;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .header {
+        padding: 20px 3%;
+    }
+
+    .logo {
+        font-size: 18px;
+        padding-left: 10px;
+    }
+
+    .home-content h1 {
+        font-size: 30px;
+    }
+
+    .home-content h3 {
+        font-size: 18px;
+    }
+
+    .home-sci {
+        bottom: 10px;
+        width: 120px;
+    }
+
+    .main-skillset {
+        width: 90%;
+    }
+
+    .about-text h2 {
+        font-size: 40px;
+    }
+
+    .about-text h5 {
+        font-size: 18px;
+    }
+
+    .about-text p {
+        font-size: 16px;
+    }
+}
+.contact {
+    background-color: #8fb9e3;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.contact h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.contact-content {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #cbc4f5;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+form input:focus,
+form textarea:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.submit-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
