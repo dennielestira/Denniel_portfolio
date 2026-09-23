@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Project Title — Denniel Estira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F6F3; --ink:#17181A; --muted:#7A7873; --line:#E1DFD8;
+  --accent:#2F6F6B; --accent-soft:#E7EFEE;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="dark"]{
+  --paper:#141412; --ink:#F3F1EC; --muted:#9A968C; --line:#2A2924;
+  --accent:#7FC4BD; --accent-soft:#1D2A28;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{height:100%;}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  font-size:16px; line-height:1.6; min-height:100%;
+  -webkit-font-smoothing:antialiased;
+}
+h1,.serif{font-family:'Fraunces',Georgia,serif; font-weight:500; letter-spacing:-0.01em;}
+a{color:inherit; text-decoration:none;}
+::selection{background:var(--accent); color:var(--paper);}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+
+.back-btn{position:fixed; top:20px; left:24px; z-index:5; display:inline-flex; align-items:center; gap:8px; background:var(--paper); border:1px solid var(--line); padding:9px 16px; border-radius:100px; cursor:pointer; font-family:inherit; font-size:.85rem; color:var(--ink);}
+.theme-toggle{position:fixed; top:20px; right:24px; z-index:5; border:1px solid var(--line); background:var(--paper); color:var(--ink); width:36px; height:36px; border-radius:100px; cursor:pointer; font-size:.9rem; display:flex; align-items:center; justify-content:center;}
+
+.detail-inner{max-width:760px; margin:0 auto; padding:100px 28px 100px;}
+.detail-hero{aspect-ratio:16/9; border-radius:4px; overflow:hidden; position:relative; margin-bottom:36px; background:var(--accent-soft);}
+.detail-hero img{width:100%; height:100%; object-fit:cover; display:block;}
+.detail-meta{display:flex; gap:10px; flex-wrap:wrap; margin:18px 0 28px;}
+.detail-meta span{font-size:.8rem; color:var(--muted); border:1px solid var(--line); padding:4px 12px; border-radius:100px;}
+.detail-inner h1{font-size:clamp(1.8rem,4vw,2.6rem); margin-bottom:16px;}
+.detail-body p{color:var(--muted); margin-bottom:16px; max-width:62ch;}
+.detail-links{display:flex; gap:14px; margin-top:30px;}
+.detail-links a{border:1px solid var(--ink); padding:10px 22px; font-size:.85rem; border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- Back button: point href at whichever section this project belongs to on your homepage -->
+<a class="back-btn" href="index.html#projects">← Back</a>
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☾</button>
+
+<div class="detail-inner" id="detailRoot">
+  <div class="detail-hero"><img id="d-img" src="" alt=""></div>
+  <div class="detail-meta" id="d-meta"></div>
+  <h1 class="serif" id="d-title"></h1>
+  <div class="detail-body" id="d-body"></div>
+  <div class="detail-links" id="d-links"></div>
+</div>
+<!--
+  ======================================================
+  STOP EDITING — nothing below needs to change
+  ======================================================
+-->
+<script src="./data.js"></script>
+
+<script>
+  // =========================
+  // PROJECT DATA
+  // =========================
+  const params = new URLSearchParams(location.search);
+  const type = params.get("type");
+  const id = params.get("id");
+
+  const source = type === "figma" ? figma : projects;
+  const item = source.find(x => x.id === id);
+
+  if (item) {
+    document.title = item.title + " — Denniel Estira";
+
+    document.getElementById("d-img").src = item.img;
+    document.getElementById("d-img").alt = item.title;
+
+    document.getElementById("d-meta").innerHTML =
+      item.tag.split("·")
+        .map(t => `<span>${t.trim()}</span>`)
+        .join("");
+
+    document.getElementById("d-title").textContent = item.title;
+
+    document.getElementById("d-body").innerHTML =
+      item.body.map(p => `<p>${p}</p>`).join("");
+
+    const linksEl = document.getElementById("d-links");
+
+    if (item.link) {
+      linksEl.innerHTML = `
+        <a href="${item.link}" target="_blank" rel="noopener">
+          Open in Figma ↗
+        </a>
+      `;
+    } else {
+      linksEl.remove();
+    }
+
+    document.querySelector(".back-btn").href =
+      type === "figma"
+        ? "index.html#figma"
+        : "index.html#projects";
+
+  } else {
+    document.getElementById("detailRoot").innerHTML =
+      "<p>Item not found.</p>";
+  }
+
+
+  // =========================
+  // DARK / LIGHT MODE
+  // =========================
+
+  const themeBtn = document.getElementById("themeToggle");
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+
+    // Change the button icon
+    themeBtn.textContent = theme === "dark" ? "☀" : "☾";
+
+    // Save the user's choice
+    localStorage.setItem("theme", theme);
+  }
+
+  // Check if the user already selected a theme
+  const savedTheme = localStorage.getItem("theme");
+
+  if (savedTheme) {
+    applyTheme(savedTheme);
+  } else {
+    // Use the computer/browser preference if no choice was saved
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    applyTheme(prefersDark ? "dark" : "light");
+  }
+
+  // Toggle when the button is clicked
+  themeBtn.addEventListener("click", function () {
+    const currentTheme =
+      document.documentElement.getAttribute("data-theme");
+
+    const newTheme =
+      currentTheme === "dark" ? "light" : "dark";
+
+    applyTheme(newTheme);
+  });
+</script>
+</body>
+</html>
