@@ -1,6 +1,5 @@
 /* ---------- SHARED SITE DATA ---------- */
 /* Used by both index.html and detail.html so project/Figma info stays in one place. */
-
 const skills = [
   {name:"HTML", pct:85},
   {name:"CSS", pct:80},
@@ -9,26 +8,96 @@ const skills = [
 ];
 
 const projects = [
-  {id:"p1", title:"Django Inventory App", tag:"Django · Python", img:"./photos/pic.png",
-   summary:"A stock‑tracking app built with Django, covering CRUD operations and a simple admin dashboard.",
-   body:["Built to practice model relationships and form handling in Django.",
-         "Includes login, item categories, and low‑stock alerts."]},
-  {id:"p2", title:"Django Blog Platform", tag:"Django · Python", img:"./photos/pic1.png",
-   summary:"A minimal blog engine with posts, comments and a tag system.",
-   body:["Focused on practicing templating and database queries in Django."]},
+  {
+    id:"p1",
+    title:"Django Inventory App",
+    tag:"Django · Python",
+    images:[
+      "./photos/pic.png",
+      "./photos/pic1.png",
+      "./photos/grad.png"
+    ],
+    summary:"A stock-tracking app built with Django, covering CRUD operations and a simple admin dashboard.",
+    body:[
+      "Built to practice model relationships and form handling in Django.",
+      "Includes login, item categories, and low-stock alerts."
+    ]
+  },
+
+  {
+    id:"p2",
+    title:"Django Blog Platform",
+    tag:"Django · Python",
+    images:[
+      "./photos/pic1.png",
+      "./photos/pic.png"
+    ],
+    summary:"A minimal blog engine with posts, comments and a tag system.",
+    body:[
+      "Focused on practicing templating and database queries in Django."
+    ]
+  },
 ];
 
 const figma = [
-  {id:"f1", title:"Mobile Banking Concept", tag:"UI · Mobile", img:"./photos/gf.jpg",
-   summary:"An exploratory Figma concept for a simplified mobile banking flow.",
-   body:["A UI exploration focused on clarity for first‑time users."], link:"#"},
-  {id:"f2", title:"Portfolio Redesign Draft", tag:"UI · Web", img:"./photos/photo2.jpg",
-   summary:"Early wireframes for this very portfolio, before it was coded.",
-   body:["Sketched in Figma to test layout and hierarchy before building in HTML/CSS."], link:"#"},
-  {id:"f3", title:"Mobile Banking Concept", tag:"UI · Mobile", img:"./photos/grad.png",
-   summary:"An exploratory Figma concept for a simplified mobile banking flow.",
-   body:["A UI exploration focused on clarity for first‑time users."], link:"#"},
-  {id:"f4", title:"Portfolio Redesign Draft", tag:"UI · Web", img:"./photos/grads.png",
-   summary:"Early wireframes for this very portfolio, before it was coded.",
-   body:["Sketched in Figma to test layout and hierarchy before building in HTML/CSS."], link:"#"},
+  {
+    id:"f1",
+    title:"Mobile Banking Concept",
+    tag:"UI · Mobile",
+    images:[
+      "./photos/gf.jpg",
+      "./photos/grad.png",
+      "./photos/grads.png"
+    ],
+    summary:"An exploratory Figma concept for a simplified mobile banking flow.",
+    body:[
+      "A UI exploration focused on clarity for first-time users."
+    ],
+    link:"#"
+  },
+
+  {
+    id:"f2",
+    title:"Portfolio Redesign Draft",
+    tag:"UI · Web",
+    images:[
+      "./photos/photo2.jpg",
+      "./photos/gf.jpg"
+    ],
+    summary:"Early wireframes for this very portfolio, before it was coded.",
+    body:[
+      "Sketched in Figma to test layout and hierarchy before building in HTML/CSS."
+    ],
+    link:"#"
+  },
+
+  {
+    id:"f3",
+    title:"Mobile Banking Concept",
+    tag:"UI · Mobile",
+    images:[
+      "./photos/grad.png",
+      "./photos/grads.png"
+    ],
+    summary:"An exploratory Figma concept for a simplified mobile banking flow.",
+    body:[
+      "A UI exploration focused on clarity for first-time users."
+    ],
+    link:"#"
+  },
+
+  {
+    id:"f4",
+    title:"Portfolio Redesign Draft",
+    tag:"UI · Web",
+    images:[
+      "./photos/grads.png",
+      "./photos/grad.png"
+    ],
+    summary:"Early wireframes for this very portfolio, before it was coded.",
+    body:[
+      "Sketched in Figma to test layout and hierarchy before building in HTML/CSS."
+    ],
+    link:"#"
+  }
 ];
