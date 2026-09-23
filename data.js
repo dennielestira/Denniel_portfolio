@@ -25,10 +25,10 @@ const figma = [
   {id:"f2", title:"Portfolio Redesign Draft", tag:"UI · Web", img:"./photos/photo2.jpg",
    summary:"Early wireframes for this very portfolio, before it was coded.",
    body:["Sketched in Figma to test layout and hierarchy before building in HTML/CSS."], link:"#"},
-  {id:"f3", title:"Mobile Banking Concept", tag:"UI · Mobile", img:"./photos/gf.jpg",
+  {id:"f3", title:"Mobile Banking Concept", tag:"UI · Mobile", img:"./photos/grad.png",
    summary:"An exploratory Figma concept for a simplified mobile banking flow.",
    body:["A UI exploration focused on clarity for first‑time users."], link:"#"},
-  {id:"f4", title:"Portfolio Redesign Draft", tag:"UI · Web", img:"./photos/photo2.jpg",
+  {id:"f4", title:"Portfolio Redesign Draft", tag:"UI · Web", img:"./photos/grads.png",
    summary:"Early wireframes for this very portfolio, before it was coded.",
    body:["Sketched in Figma to test layout and hierarchy before building in HTML/CSS."], link:"#"},
 ];
