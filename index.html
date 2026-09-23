@@ -312,7 +312,7 @@ function renderSkills(){
 function renderGrid(containerId, items, type){
   const el = document.getElementById(containerId);
   el.innerHTML = items.map((it,i)=>`
-    <a class="card" href="detail.html?type=${type}&id=${it.id}" aria-label="Open ${it.title}">
+    <a class="card" href="Detail.html?type=${type}&id=${it.id}" aria-label="Open ${it.title}">
       <div class="thumb"><img src="${it.img}" alt="${it.title}" loading="lazy"></div>
       <div class="card-body">
         <div class="card-index">${String(i+1).padStart(2,'0')} — ${it.tag}</div>
