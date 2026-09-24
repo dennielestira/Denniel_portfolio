@@ -181,38 +181,122 @@ nav{
   cursor:pointer;
   background:none;
   border:none;
+  padding:8px;
+  margin:-8px;
+
+  /* stays above the open menu so it can close it */
+  position:relative;
+  z-index:2;
 }
 
 .burger span{
   width:22px;
   height:1.5px;
   background:var(--ink);
+  transition:
+    transform .25s ease,
+    opacity .2s ease;
+}
+
+/* burger turns into an X while the menu is open */
+
+.burger.open span:nth-child(1){
+  transform:translateY(6.5px) rotate(45deg);
+}
+
+.burger.open span:nth-child(2){
+  opacity:0;
+}
+
+.burger.open span:nth-child(3){
+  transform:translateY(-6.5px) rotate(-45deg);
+}
+
+.nav-backdrop{
+  display:none;
+}
+
+body.menu-open{
+  overflow:hidden;
 }
 
 @media (max-width:640px){
 
+  /* backdrop-filter turns the nav into the containing block of the
+     fixed menu (that's why it looked clear and tiny), so turn it off */
+
+  nav{
+    background:var(--paper);
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+
   .navlinks{
     position:fixed;
     inset:0 0 0 auto;
-    top:0;
+    z-index:1;
     height:100%;
-    width:70%;
-    background:var(--paper);
+    width:72%;
+    max-width:320px;
+    background:var(--accent-soft);
     flex-direction:column;
     align-items:flex-start;
     padding:90px 32px;
     gap:22px;
     transform:translateX(100%);
-    transition:transform .3s ease;
+    visibility:hidden;
+    transition:
+      transform .3s ease,
+      visibility 0s .3s;
     border-left:1px solid var(--line);
+    box-shadow:-12px 0 32px rgba(0,0,0,.25);
   }
 
   .navlinks.open{
     transform:translateX(0);
+    visibility:visible;
+    transition:
+      transform .3s ease,
+      visibility 0s;
+  }
+
+  .navlinks a{
+    color:var(--ink);
+    font-size:1.05rem;
+  }
+
+  .navlinks a.active{
+    color:var(--accent);
+  }
+
+  .navlinks .theme-toggle{
+    margin-top:8px;
+    background:var(--paper);
   }
 
   .burger{
     display:flex;
+  }
+
+  /* dark overlay behind the menu; tap it to close */
+
+  .nav-backdrop{
+    display:block;
+    position:fixed;
+    inset:0;
+    z-index:45;
+    background:rgba(0,0,0,.5);
+    opacity:0;
+    visibility:hidden;
+    transition:
+      opacity .3s ease,
+      visibility 0s .3s;
+  }
+
+  .nav-backdrop.open{
+    opacity:1;
+    visibility:visible;
+    transition:opacity .3s ease;
   }
 
 }
@@ -471,6 +555,176 @@ section,
   text-align:right;
 }
 
+/* OJT EXPERIENCE */
+
+.ojt-list{
+  border-bottom:1px solid var(--line);
+}
+
+.ojt-item{
+  display:grid;
+  grid-template-columns:190px 1fr;
+  gap:32px;
+  padding:30px 0;
+  border-top:1px solid var(--line);
+}
+
+.ojt-meta{
+  font-size:.85rem;
+  color:var(--muted);
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.ojt-meta .period{
+  color:var(--ink);
+  font-size:.9rem;
+}
+
+.ojt-main h3{
+  font-size:1.25rem;
+  line-height:1.25;
+  text-wrap:balance;
+}
+
+.ojt-main .company{
+  color:var(--accent);
+  font-size:.95rem;
+  margin:4px 0 16px;
+}
+
+.ojt-main ul{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.ojt-main li{
+  position:relative;
+  padding-left:20px;
+  color:var(--muted);
+  max-width:62ch;
+}
+
+.ojt-main li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:.8em;
+  width:10px;
+  height:1px;
+  background:var(--accent);
+}
+
+.ojt-tools{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+
+.ojt-tools span{
+  font-size:.78rem;
+  color:var(--muted);
+  border:1px solid var(--line);
+  padding:3px 11px;
+  border-radius:100px;
+}
+
+/* OJT photos */
+
+.ojt-gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:10px;
+  margin-top:24px;
+}
+
+.ojt-gallery.single{
+  grid-template-columns:1fr;
+  max-width:420px;
+}
+
+.ojt-photo{
+  position:relative;
+  display:block;
+  padding:0;
+  border:1px solid var(--line);
+  border-radius:4px;
+  overflow:hidden;
+  background:var(--accent-soft);
+  cursor:zoom-in;
+  aspect-ratio:4/3;
+}
+
+.ojt-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform .35s ease;
+}
+
+.ojt-photo:hover img{
+  transform:scale(1.04);
+}
+
+/* Lightbox */
+
+.lightbox{
+  position:fixed;
+  inset:0;
+  z-index:300;
+  background:rgba(0,0,0,.88);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:56px 20px;
+}
+
+.lightbox.open{
+  display:flex;
+}
+
+.lightbox img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  border-radius:4px;
+}
+
+.lightbox-close{
+  position:absolute;
+  top:calc(16px + env(safe-area-inset-top,0px));
+  right:20px;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.6);
+  background:rgba(0,0,0,.45);
+  color:#fff;
+  font-size:20px;
+  line-height:1;
+  cursor:pointer;
+}
+
+@media (max-width:640px){
+
+  .ojt-item{
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  .ojt-meta{
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:4px 14px;
+  }
+
+}
+
 /* CARD GRIDS */
 
 .card-grid{
@@ -532,14 +786,166 @@ section,
   margin-bottom:8px;
 }
 
+/* Long titles: tight lines, balanced wrapping, max 3 lines */
+
 .card-body h3{
-  font-size:1.15rem;
-  margin-bottom:6px;
+  font-size:1.05rem;
+  line-height:1.3;
+  margin-bottom:8px;
+
+  text-wrap:balance;
+  overflow-wrap:anywhere;
+
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 
 .card-body p{
   color:var(--muted);
   font-size:.9rem;
+
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* CLICKABLE HINTS */
+
+.hint{
+  color:var(--muted);
+  font-size:.85rem;
+  margin-bottom:28px;
+}
+
+.head:has(+ .hint){
+  margin-bottom:12px;
+}
+
+/* dark wash + "View project" pill on card image hover */
+
+.thumb::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0);
+  transition:background .25s ease;
+  pointer-events:none;
+}
+
+.card:hover .thumb::after,
+.card:focus-visible .thumb::after{
+  background:rgba(0,0,0,.28);
+}
+
+.thumb-cta{
+  position:absolute;
+  left:50%;
+  bottom:16px;
+  z-index:1;
+  transform:translate(-50%,8px);
+  background:var(--paper);
+  color:var(--ink);
+  border:1px solid var(--line);
+  border-radius:100px;
+  padding:7px 16px;
+  font-size:.82rem;
+  white-space:nowrap;
+  opacity:0;
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
+  pointer-events:none;
+}
+
+.card:hover .thumb-cta,
+.card:focus-visible .thumb-cta{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+/* always-visible label (works on touch screens too) */
+
+.card-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:16px;
+  font-size:.85rem;
+  color:var(--accent);
+  border-bottom:1px solid transparent;
+  transition:border-color .15s ease;
+}
+
+.card-cta .arrow{
+  display:inline-block;
+  transition:transform .2s ease;
+}
+
+.card:hover .card-cta{
+  border-color:var(--accent);
+}
+
+.card:hover .card-cta .arrow{
+  transform:translate(2px,-2px);
+}
+
+.card:hover .card-body h3{
+  text-decoration:underline;
+  text-decoration-color:var(--accent);
+  text-underline-offset:4px;
+}
+
+/* OJT photo: enlarge badge + hint */
+
+.ojt-hint{
+  margin-top:24px;
+  font-size:.8rem;
+  color:var(--muted);
+}
+
+.ojt-hint + .ojt-gallery{
+  margin-top:10px;
+}
+
+.ojt-photo::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0);
+  transition:background .25s ease;
+  pointer-events:none;
+}
+
+.ojt-photo:hover::after,
+.ojt-photo:focus-visible::after{
+  background:rgba(0,0,0,.22);
+}
+
+.ojt-zoom{
+  position:absolute;
+  right:8px;
+  bottom:8px;
+  z-index:1;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:rgba(0,0,0,.6);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:
+    background .2s ease,
+    transform .2s ease;
+}
+
+.ojt-photo:hover .ojt-zoom,
+.ojt-photo:focus-visible .ojt-zoom{
+  background:var(--accent);
+  transform:scale(1.1);
 }
 
 /* CONTACT */
@@ -620,6 +1026,7 @@ footer{
       <a href="#home">Home</a>
       <a href="#about">About</a>
       <a href="#skillsets">Skills</a>
+      <a href="#ojt">OJT</a>
       <a href="#projects">Projects</a>
       <a href="#figma">Figma</a>
       <a href="#contact">Contact</a>
@@ -636,7 +1043,9 @@ footer{
     <button
       class="burger"
       id="burger"
-      aria-label="Menu">
+      aria-label="Menu"
+      aria-expanded="false"
+      aria-controls="navLinks">
 
       <span></span>
       <span></span>
@@ -647,6 +1056,9 @@ footer{
   </div>
 
 </nav>
+
+<!-- dark overlay behind the mobile menu -->
+<div class="nav-backdrop" id="navBackdrop"></div>
 
 
 <!-- HOME -->
@@ -812,6 +1224,34 @@ footer{
 </section>
 
 
+<!-- OJT EXPERIENCE -->
+
+<section id="ojt">
+
+  <div class="wrap">
+
+    <div class="head">
+
+      <h2>
+        OJT experience
+      </h2>
+
+      <span class="num">
+        On-the-job training
+      </span>
+
+    </div>
+
+    <div
+      class="ojt-list"
+      id="ojtList">
+    </div>
+
+  </div>
+
+</section>
+
+
 <!-- PROJECTS -->
 
 <section id="projects">
@@ -829,6 +1269,10 @@ footer{
       </span>
 
     </div>
+
+    <p class="hint">
+      Click any project to see its screenshots and full details.
+    </p>
 
     <div
       class="card-grid"
@@ -857,6 +1301,10 @@ footer{
       </span>
 
     </div>
+
+    <p class="hint">
+      Click any design to view its screens and details.
+    </p>
 
     <div
       class="card-grid"
@@ -959,6 +1407,30 @@ footer{
 </footer>
 
 
+<!-- OJT PHOTO LIGHTBOX -->
+
+<div
+  class="lightbox"
+  id="lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Photo viewer">
+
+  <button
+    type="button"
+    class="lightbox-close"
+    aria-label="Close photo">
+    ×
+  </button>
+
+  <img
+    id="lightboxImg"
+    src=""
+    alt="">
+
+</div>
+
+
 <!-- EMAILJS -->
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -970,6 +1442,58 @@ footer{
 
 
 <script>
+
+/* =========================
+   OJT DATA
+   Edit this list. Add one
+   object per OJT placement.
+========================= */
+
+/* Temporary placeholder photo (a grey box with "Photo 1", etc.).
+   Replace these with real file paths like "./photos/ojt-1.jpg" */
+
+function placeholder(n){
+
+  const svg =
+    "<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>" +
+    "<rect width='100%' height='100%' fill='#9A968C' fill-opacity='.25'/>" +
+    "<text x='50%' y='50%' fill='#7A7873' font-family='sans-serif' " +
+    "font-size='32' text-anchor='middle' dominant-baseline='middle'>" +
+    "Photo " + n + "</text></svg>";
+
+  return "data:image/svg+xml;charset=utf-8," +
+    encodeURIComponent(svg);
+
+}
+
+
+const ojt = [
+
+  {
+    role: "Web Designer Intern",
+    company: "Perfect Health",
+    period: "March 17, 2026 – June 13, 2026",
+
+    duties: [
+      "Maintained and updated the company website using WordPress and Elementor.",
+      "Managed Yoast SEO settings to improve website visibility and search engine performance.",
+      "Developed new SEO-focused pages and implemented updated product page designs.",
+      "Optimized Yoast SEO configurations across the site."
+    ],
+
+    tools: ["WordPress", "Elementor", "Yoast SEO"],
+
+    /* Add as many photos as you like (1 photo = larger image,
+       2+ photos = small grid). Click any photo to enlarge it. */
+    images: [
+      "./photos/ojt1.png",
+      "./photos/ojt2.png",
+      "./photos/ojt3.png"
+    ]
+  }
+
+];
+
 
 /* =========================
    EMAILJS
@@ -1032,16 +1556,54 @@ document
    BURGER MENU
 ========================= */
 
-document
-  .getElementById("burger")
-  .addEventListener("click", () => {
+const burger =
+  document.getElementById("burger");
 
-    document
-      .getElementById("navLinks")
-      .classList.toggle("open");
+const navLinks =
+  document.getElementById("navLinks");
 
-  });
+const navBackdrop =
+  document.getElementById("navBackdrop");
 
+
+function setMenu(open){
+
+  navLinks.classList.toggle("open", open);
+  burger.classList.toggle("open", open);
+  navBackdrop.classList.toggle("open", open);
+  document.body.classList.toggle("menu-open", open);
+
+  burger.setAttribute("aria-expanded", open);
+
+  burger.setAttribute(
+    "aria-label",
+    open ? "Close menu" : "Menu"
+  );
+
+}
+
+
+/* burger button opens AND closes */
+
+burger.addEventListener("click", () => {
+
+  setMenu(
+    !navLinks.classList.contains("open")
+  );
+
+});
+
+
+/* tap the dark area to close */
+
+navBackdrop.addEventListener("click", () => {
+
+  setMenu(false);
+
+});
+
+
+/* choosing a link closes it */
 
 document
   .querySelectorAll(".navlinks a")
@@ -1049,11 +1611,33 @@ document
 
     a.addEventListener("click", () => {
 
-      document
-        .getElementById("navLinks")
-        .classList.remove("open");
+      setMenu(false);
 
     });
+
+  });
+
+
+/* Esc closes it */
+
+document.addEventListener("keydown", (e) => {
+
+  if(e.key === "Escape"){
+    setMenu(false);
+  }
+
+});
+
+
+/* close if the window becomes wide (desktop layout) */
+
+window
+  .matchMedia("(min-width:641px)")
+  .addEventListener("change", (e) => {
+
+    if(e.matches){
+      setMenu(false);
+    }
 
   });
 
@@ -1261,6 +1845,169 @@ function renderSkills(){
 
 
 /* =========================
+   RENDER OJT EXPERIENCE
+========================= */
+
+function renderOjt(){
+
+  document.getElementById("ojtList")
+    .innerHTML = ojt.map(o => `
+
+      <article class="ojt-item">
+
+        <div class="ojt-meta">
+
+          <span class="period">
+            ${o.period}
+          </span>
+
+          ${o.hours
+            ? `<span>${o.hours}</span>`
+            : ""}
+
+          ${o.location
+            ? `<span>${o.location}</span>`
+            : ""}
+
+        </div>
+
+
+        <div class="ojt-main">
+
+          <h3>
+            ${o.role}
+          </h3>
+
+          <div class="company">
+            ${o.company}
+          </div>
+
+          <ul>
+            ${o.duties
+              .map(d => `<li>${d}</li>`)
+              .join("")}
+          </ul>
+
+          ${o.tools && o.tools.length
+            ? `<div class="ojt-tools">
+                ${o.tools
+                  .map(t => `<span>${t}</span>`)
+                  .join("")}
+              </div>`
+            : ""}
+
+          ${o.images && o.images.length
+            ? `<p class="ojt-hint">Click a photo to enlarge it</p>
+              <div class="ojt-gallery${
+                o.images.length === 1
+                  ? " single"
+                  : ""
+              }">
+                ${o.images
+                  .map((src, n) => `
+                    <button
+                      type="button"
+                      class="ojt-photo"
+                      data-src="${src}"
+                      data-alt="${o.role} - photo ${n + 1}"
+                      aria-label="View photo ${n + 1} larger">
+                      <img
+                        src="${src}"
+                        alt="${o.role} - photo ${n + 1}"
+                        loading="lazy"
+                        onerror="console.warn('OJT photo not found:', this.getAttribute('src')); this.closest('.ojt-photo').style.display='none'">
+
+                      <span class="ojt-zoom" aria-hidden="true">
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="14"
+                          height="14"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round">
+                          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                        </svg>
+                      </span>
+                    </button>
+                  `)
+                  .join("")}
+              </div>`
+            : ""}
+
+        </div>
+
+      </article>
+
+    `).join("");
+
+}
+
+
+/* =========================
+   OJT PHOTO LIGHTBOX
+========================= */
+
+const lightbox =
+  document.getElementById("lightbox");
+
+const lightboxImg =
+  document.getElementById("lightboxImg");
+
+
+function closeLightbox(){
+
+  lightbox.classList.remove("open");
+
+  lightboxImg.src = "";
+
+}
+
+
+document
+  .getElementById("ojtList")
+  .addEventListener("click", (e) => {
+
+    const btn =
+      e.target.closest(".ojt-photo");
+
+    if(!btn){
+      return;
+    }
+
+    lightboxImg.src =
+      btn.dataset.src;
+
+    lightboxImg.alt =
+      btn.dataset.alt;
+
+    lightbox.classList.add("open");
+
+  });
+
+
+lightbox.addEventListener("click", (e) => {
+
+  /* close on backdrop or X, not on the image */
+
+  if(e.target !== lightboxImg){
+    closeLightbox();
+  }
+
+});
+
+
+document.addEventListener("keydown", (e) => {
+
+  if(e.key === "Escape"){
+    closeLightbox();
+  }
+
+});
+
+
+/* =========================
    RENDER PROJECT / FIGMA
    CARDS + AUTOMATIC SLIDESHOW
 ========================= */
@@ -1294,6 +2041,12 @@ function renderGrid(containerId, items, type){
             alt="${it.title}"
             loading="lazy">
 
+          <span class="thumb-cta">
+            ${type === "figma"
+              ? "View design"
+              : "View project"}
+          </span>
+
         </div>
 
 
@@ -1315,6 +2068,11 @@ function renderGrid(containerId, items, type){
           <p>
             ${it.summary}
           </p>
+
+          <span class="card-cta">
+            View details
+            <span class="arrow" aria-hidden="true">↗</span>
+          </span>
 
         </div>
 
@@ -1402,6 +2160,8 @@ function renderGrid(containerId, items, type){
 ========================= */
 
 renderSkills();
+
+renderOjt();
 
 
 renderGrid(
