@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Graduate 3D Character</title>
+<style>
+:root{--bg1:#e6e8ed;--bg2:#9ba1ac;--fg:#1b1d22;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#6b6f7a;--bg2:#17181c;--fg:#eceef2}}
+:root[data-theme="dark"]{--bg1:#6b6f7a;--bg2:#17181c;--fg:#eceef2}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 50% 42%,var(--bg1),var(--bg2) 78%);color:var(--fg);font-family:Georgia,'Times New Roman',serif;overflow:hidden}
+#stage{position:absolute;inset:0;touch-action:none;cursor:grab}
+#stage:active{cursor:grabbing}
+canvas{display:block}
+#hint{position:absolute;left:0;right:0;bottom:calc(16px + env(safe-area-inset-bottom,0px));text-align:center;font-size:15px;letter-spacing:.02em;opacity:.8;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="hint">Drag to turn him around. Move your cursor and he'll look at it.</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const stage=document.getElementById('stage');
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.outputEncoding=THREE.sRGBEncoding;
+stage.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(35,1,0.1,100);
+scene.add(new THREE.HemisphereLight(0xffffff,0x555566,0.85));
+const key=new THREE.DirectionalLight(0xffffff,0.9);key.position.set(3,5,5);scene.add(key);
+const rim=new THREE.DirectionalLight(0xff8a4d,0.7);rim.position.set(-4,2,-3);scene.add(rim);
+
+const M=(c,r=0.7,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
+const skin=M(0xd29a6e,0.6),hairM=M(0x15110f,0.55),gown=M(0x141416,0.85);gown.side=THREE.DoubleSide;
+const orange=M(0xf26b21,0.6),white=M(0xf3f4f6,0.7),maroon=M(0x6a1a2a,0.5),dark=M(0x0b0b0c,0.3);
+const R=y=>0.77-0.21*y; // gown radius at height y
+
+const rig=new THREE.Group();scene.add(rig);
+const add=(m,p,par=rig)=>{if(p)m.position.set(...p);par.add(m);return m;};
+
+// gown body
+add(new THREE.Mesh(new THREE.CylinderGeometry(0.56,0.99,2.05,48),gown),[0,-0.025,0]);
+[-1,1].forEach(s=>add(new THREE.Mesh(new THREE.SphereGeometry(0.2,20,16),gown),[s*0.6,0.85,-0.02]));
+
+// surface patch that hugs the gown
+function surf(yTop,yBot,hw,off,mat,rows=14,cols=10){
+  const pos=[],idx=[];
+  for(let i=0;i<=rows;i++){const y=yTop+(yBot-yTop)*i/rows,w=Math.max(hw(y),0.001),r=R(y);
+    for(let j=0;j<=cols;j++){const x=-w+2*w*j/cols;pos.push(x,y,Math.sqrt(Math.max(r*r-x*x,0.01))+off);}}
+  for(let i=0;i<rows;i++)for(let j=0;j<cols;j++){const a=i*(cols+1)+j,b=a+1,c=a+cols+1,d=c+1;idx.push(a,c,b,b,c,d);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  g.setIndex(idx);g.computeVertexNormals();return new THREE.Mesh(g,mat);
+}
+rig.add(surf(1.0,-0.25,y=>0.5*(y+0.25)/1.25,0.02,orange));   // orange stole
+rig.add(surf(0.95,0.15,y=>0.3*(y-0.15)/0.8,0.035,white));    // shirt V
+
+// tie
+const ts=new THREE.Shape();ts.moveTo(-0.045,0);ts.lineTo(0.045,0);ts.lineTo(0.085,-0.5);ts.lineTo(0,-0.6);ts.lineTo(-0.085,-0.5);
+const tie=new THREE.Mesh(new THREE.ExtrudeGeometry(ts,{depth:0.025,bevelEnabled:false}),maroon);
+tie.position.set(0,0.84,R(0.6)+0.04);tie.rotation.x=-0.2;rig.add(tie);
+add(new THREE.Mesh(new THREE.BoxGeometry(0.11,0.09,0.06),maroon),[0,0.86,R(0.85)+0.055]);
+
+// medal
+const medal=new THREE.Group();medal.position.set(0,-0.32,R(-0.32)+0.07);medal.rotation.x=-0.2;rig.add(medal);
+const disc=add(new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.13,0.03,32),M(0xc9ccd2,0.3,0.8)),null,medal);disc.rotation.x=Math.PI/2;
+const gem=add(new THREE.Mesh(new THREE.BoxGeometry(0.1,0.1,0.02),M(0x2e7d4a,0.5)),[0,0,0.02],medal);gem.rotation.z=Math.PI/4;
+add(new THREE.Mesh(new THREE.BoxGeometry(0.03,0.35,0.01),M(0xaeb2ba,0.4,0.6)),[0,0.24,0],medal);
+
+// neck and collar
+add(new THREE.Mesh(new THREE.CylinderGeometry(0.17,0.19,0.45,20),skin),[0,1.175,0]);
+add(new THREE.Mesh(new THREE.CylinderGeometry(0.27,0.31,0.16,28,1,true),Object.assign(white.clone(),{side:THREE.DoubleSide})),[0,1.02,0]);
+
+// head
+const head=new THREE.Group();head.position.set(0,1.95,0);rig.add(head);
+const skull=add(new THREE.Mesh(new THREE.SphereGeometry(0.6,40,32),skin));skull.scale.set(1,1.05,1);head.add(skull);
+[-1,1].forEach(s=>{
+  const ear=add(new THREE.Mesh(new THREE.SphereGeometry(0.12,16,12),skin),[s*0.6,0,0],head);ear.scale.set(0.6,1.2,0.8);
+  const eye=add(new THREE.Mesh(new THREE.SphereGeometry(0.06,16,12),dark),[s*0.2,0.05,0.545],head);eye.name='eye';
+  add(new THREE.Mesh(new THREE.SphereGeometry(0.014,8,8),white),[s*0.2+0.018,0.075,0.6],head).name='eye';
+  const br=add(new THREE.Mesh(new THREE.BoxGeometry(0.17,0.03,0.03),hairM),[s*0.2,0.2,0.55],head);br.rotation.z=-s*0.1;
+  add(new THREE.Mesh(new THREE.BoxGeometry(0.06,0.3,0.2),hairM),[s*0.57,0.12,0.12],head);
+});
+const nose=add(new THREE.Mesh(new THREE.SphereGeometry(0.07,16,12),M(0xc48a5e,0.6)),[0,-0.06,0.59],head);nose.scale.set(1,0.8,0.8);
+const mouth=add(new THREE.Mesh(new THREE.TorusGeometry(0.1,0.018,8,24,Math.PI),M(0x7a3b30,0.5)),[0,-0.2,0.55],head);mouth.rotation.z=Math.PI;
+// hair
+const hair=add(new THREE.Mesh(new THREE.SphereGeometry(0.645,40,24,0,Math.PI*2,0,Math.PI*0.52),hairM),[0,0.06,-0.04],head);
+hair.scale.y=1.05;hair.rotation.x=-0.5;
+const quiff=add(new THREE.Mesh(new THREE.SphereGeometry(0.5,24,16),hairM),[0.04,0.6,0.22],head);quiff.scale.set(1,0.34,0.7);quiff.rotation.x=-0.25;
+
+// arms and cap
+const limb=(a,b,r1,r2)=>{const A=new THREE.Vector3(...a),B=new THREE.Vector3(...b);
+  const m=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,A.distanceTo(B),24,1,true),gown);
+  m.position.copy(A).add(B).multiplyScalar(0.5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),A.clone().sub(B).normalize());return m;};
+[-1,1].forEach(s=>{
+  rig.add(limb([s*0.62,0.82,-0.02],[s*0.55,-0.15,1.1],0.17,0.3));
+  add(new THREE.Mesh(new THREE.SphereGeometry(0.11,16,12),skin),[s*0.5,-0.22,1.3]);
+});
+const cap=new THREE.Group();cap.position.set(0,-0.05,1.32);cap.rotation.x=1.05;rig.add(cap);
+add(new THREE.Mesh(new THREE.BoxGeometry(1,0.05,1),dark),null,cap);
+add(new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.04,16),dark),[0,0.045,0],cap);
+const cord=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0,-0.02,1.36),new THREE.Vector3(0.1,0.06,1.43),new THREE.Vector3(0.22,-0.03,1.44)]),16,0.012,6),orange);rig.add(cord);
+add(new THREE.Mesh(new THREE.SphereGeometry(0.045,12,10),orange),[0.22,-0.05,1.44]);
+add(new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.08,0.5,14),orange),[0.22,-0.32,1.44]);
+
+// stage floor
+const floor=add(new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.6,0.1,64),M(0x2a2c33,0.6)),[0,-1.12,0],scene);
+add(new THREE.Mesh(new THREE.TorusGeometry(1.5,0.02,8,64),M(0xf26b21,0.4)),[0,-1.06,0],scene).rotation.x=Math.PI/2;
+
+// layout
+function resize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;
+  const d=Math.max(7,2.7/(0.63*camera.aspect));camera.position.set(0,1.3,d);camera.lookAt(0,0.75,0);camera.updateProjectionMatrix();}
+addEventListener('resize',resize);resize();
+
+// interaction
+let yaw=0,drag=false,lx=0,px=0,py=0;
+stage.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;stage.setPointerCapture(e.pointerId);});
+stage.addEventListener('pointerup',()=>drag=false);
+stage.addEventListener('pointermove',e=>{
+  px=(e.clientX/stage.clientWidth-0.5)*2;py=(e.clientY/stage.clientHeight-0.5)*2;
+  if(drag){yaw+=(e.clientX-lx)*0.012;lx=e.clientX;}
+});
+const eyes=[];rig.traverse(o=>{});head.children.forEach(o=>{if(o.name==='eye')eyes.push(o);});
+let nextBlink=2;
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const clock=new THREE.Clock();
+(function loop(){
+  const t=clock.getElapsedTime();
+  if(!drag){yaw=((yaw+Math.PI)%(Math.PI*2)+Math.PI*2)%(Math.PI*2)-Math.PI;yaw*=0.96;}
+  rig.rotation.y=yaw;
+  if(!reduce)rig.position.y=Math.sin(t*1.6)*0.03;
+  const front=Math.cos(yaw)>0?1:0;
+  head.rotation.y+=((px*0.5*front)-head.rotation.y)*0.08;
+  head.rotation.x+=((py*0.25*front)-head.rotation.x)*0.08;
+  if(t>nextBlink){eyes.forEach(e=>e.scale.y=0.1);if(t>nextBlink+0.12){eyes.forEach(e=>e.scale.y=1);nextBlink=t+2+Math.random()*3;}}
+  renderer.render(scene,camera);
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

@@ -446,24 +446,45 @@ section,
 
 .about-grid{
   display:grid;
-  grid-template-columns:200px 1fr;
+  grid-template-columns:minmax(220px,260px) 1fr;
   gap:48px;
   align-items:start;
 }
 
 .avatar{
-  width:200px;
-  height:200px;
+  width:min(100%,260px);
+  aspect-ratio:3/4;
+  position:relative;
+  perspective:900px;
+  cursor:grab;
+  touch-action:none;
+}
+
+.avatar:active{
+  cursor:grabbing;
+}
+
+.avatar canvas,
+.avatar img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
   border-radius:6px;
-  overflow:hidden;
-  background:var(--accent-soft);
+}
+
+.avatar canvas{
+  z-index:1;
 }
 
 .avatar img{
-  width:100%;
-  height:100%;
   object-fit:cover;
-  display:block;
+  background:var(--accent-soft);
+}
+
+.avatar.is-ready img{
+  visibility:hidden;
 }
 
 .about-text p{
@@ -501,11 +522,19 @@ section,
     justify-items:flex-start;
   }
 
+  .avatar{
+    width:min(100%,240px);
+  }
+
 }
 
 /* SKILLS */
 
 #skillsets{
+  min-height:180vh;
+  min-height:180dvh;
+  padding:0;
+  justify-content:flex-start;
   background:
     linear-gradient(
       180deg,
@@ -515,44 +544,146 @@ section,
     url('./photos/bg.jpg') center/cover no-repeat;
 }
 
-.skill-row{
-  display:grid;
-  grid-template-columns:140px 1fr 48px;
-  align-items:center;
-  gap:18px;
-  padding:16px 0;
-  border-top:1px solid var(--line);
+#skillsets .wrap{
+  position:sticky;
+  top:70px;
+  min-height:calc(100vh - 70px);
+  min-height:calc(100dvh - 70px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding-top:32px;
+  padding-bottom:32px;
 }
 
-.skill-row:last-child{
-  border-bottom:none;
+.skill-explorer{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(260px,.9fr);
+  gap:44px;
+  align-items:stretch;
 }
 
 .skillset-list{
+  border-top:1px solid var(--line);
   border-bottom:1px solid var(--line);
 }
 
+.skill-row{
+  width:100%;
+  display:grid;
+  grid-template-columns:40px 1fr 20px;
+  align-items:center;
+  gap:12px;
+  padding:16px 12px;
+  border:0;
+  border-top:1px solid var(--line);
+  background:transparent;
+  color:var(--ink);
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+  transition:background .2s ease, padding .2s ease;
+}
+
+.skill-row:first-child{
+  border-top:0;
+}
+
+.skill-row:hover,
+.skill-row[aria-pressed="true"]{
+  background:var(--accent-soft);
+  padding-left:18px;
+}
+
+.skill-index{
+  color:var(--muted);
+  font-size:.78rem;
+}
+
 .skill-row .name{
+  font-size:1rem;
+}
+
+.skill-arrow{
+  color:var(--accent);
+  opacity:.45;
+  transition:opacity .2s ease, transform .2s ease;
+}
+
+.skill-row:hover .skill-arrow,
+.skill-row[aria-pressed="true"] .skill-arrow{
+  opacity:1;
+  transform:translateX(3px);
+}
+
+.skill-panel{
+  min-height:300px;
+  padding:12px 0 12px 38px;
+  border-left:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.skill-category{
+  color:var(--accent);
+  font-size:.82rem;
+}
+
+.skill-score{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  margin:10px 0 18px;
+}
+
+.skill-score h3{
+  font-size:2rem;
+  line-height:1.15;
+  overflow-wrap:anywhere;
+}
+
+.skill-score .value{
+  color:var(--accent);
+  font-family:'Fraunces',Georgia,serif;
+  font-size:3rem;
+  line-height:1;
+}
+
+.skill-meter{
+  height:4px;
+  background:var(--line);
+}
+
+.skill-meter-fill{
+  width:0;
+  height:100%;
+  background:var(--accent);
+  transition:width .7s cubic-bezier(.2,.7,.2,1);
+}
+
+.skill-note{
+  max-width:36ch;
+  margin-top:20px;
+  color:var(--muted);
   font-size:.95rem;
 }
 
-.track{
-  height:2px;
-  background:var(--line);
-  position:relative;
-}
+@media (max-width:640px){
 
-.fill{
-  height:2px;
-  background:var(--accent);
-  width:0;
-  transition:width 1.1s ease;
-}
+  .skill-explorer{
+    grid-template-columns:1fr;
+    gap:28px;
+  }
 
-.pct{
-  font-size:.85rem;
-  color:var(--muted);
-  text-align:right;
+  .skill-panel{
+    min-height:0;
+    padding:24px 0 0;
+    border-left:0;
+    border-top:1px solid var(--line);
+  }
+
 }
 
 /* OJT EXPERIENCE */
@@ -898,6 +1029,233 @@ section,
   text-underline-offset:4px;
 }
 
+/* PROJECT / FIGMA SHOWCASES */
+
+.work-showcase-main{
+  display:grid;
+  grid-template-columns:.85fr 1.15fr;
+  gap:1px;
+  border:1px solid var(--line);
+  background:var(--line);
+}
+
+.work-showcase-visual{
+  position:relative;
+  display:block;
+  min-width:0;
+  min-height:300px;
+  overflow:hidden;
+  background:var(--accent-soft);
+}
+
+.work-showcase-image{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  transition:transform .55s ease, opacity .25s ease;
+}
+
+.work-showcase-visual:hover .work-showcase-image{
+  transform:scale(1.035);
+}
+
+.work-showcase-count{
+  position:absolute;
+  left:14px;
+  top:14px;
+  padding:5px 9px;
+  background:var(--paper);
+  color:var(--ink);
+  font-size:.78rem;
+}
+
+.work-showcase-copy{
+  min-width:0;
+  padding:30px;
+  background:var(--paper);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.work-showcase-meta{
+  color:var(--accent);
+  font-size:.82rem;
+  margin-bottom:14px;
+}
+
+.work-showcase-copy h3{
+  font-size:1.35rem;
+  line-height:1.25;
+  text-wrap:balance;
+  overflow-wrap:anywhere;
+}
+
+.work-showcase-copy p{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:.92rem;
+  display:-webkit-box;
+  -webkit-line-clamp:4;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.work-showcase-link{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  align-self:flex-start;
+  margin-top:20px;
+  color:var(--accent);
+  font-size:.88rem;
+  border-bottom:1px solid transparent;
+}
+
+.work-showcase-link:hover{
+  border-color:var(--accent);
+}
+
+.work-showcase-controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:16px;
+}
+
+.work-showcase-thumbs{
+  display:flex;
+  gap:8px;
+  max-width:calc(100% - 130px);
+  overflow-x:auto;
+  padding:3px;
+}
+
+.work-showcase-thumb{
+  position:relative;
+  flex:0 0 72px;
+  width:72px;
+  aspect-ratio:4/3;
+  padding:0;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:var(--accent-soft);
+  cursor:pointer;
+  opacity:.65;
+  transition:opacity .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.work-showcase-thumb:hover{
+  transform:translateY(-2px);
+  opacity:1;
+}
+
+.work-showcase-thumb[aria-pressed="true"]{
+  border-color:var(--accent);
+  opacity:1;
+}
+
+.work-showcase-thumb img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+}
+
+.work-showcase-thumb span{
+  position:absolute;
+  left:4px;
+  bottom:4px;
+  padding:1px 4px;
+  background:var(--paper);
+  color:var(--ink);
+  font-size:.68rem;
+}
+
+.work-showcase-stepper{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:0 0 auto;
+}
+
+.work-showcase-arrow{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--ink);
+  font:inherit;
+  cursor:pointer;
+  transition:border-color .2s ease, color .2s ease;
+}
+
+.work-showcase-arrow:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+.work-showcase-position{
+  min-width:48px;
+  text-align:center;
+  color:var(--muted);
+  font-size:.8rem;
+  font-variant-numeric:tabular-nums;
+}
+
+.project-showcase .work-showcase-visual{
+  grid-column:2;
+  grid-row:1;
+}
+
+.project-showcase .work-showcase-copy{
+  grid-column:1;
+  grid-row:1;
+}
+
+.figma-showcase .work-showcase-main{
+  grid-template-columns:1.3fr .7fr;
+}
+
+@media (max-width:640px){
+
+  .work-showcase-main,
+  .figma-showcase .work-showcase-main{
+    grid-template-columns:1fr;
+  }
+
+  .project-showcase .work-showcase-visual,
+  .project-showcase .work-showcase-copy{
+    grid-column:1;
+    grid-row:auto;
+  }
+
+  .work-showcase-copy{
+    padding:22px;
+  }
+
+  .work-showcase-visual{
+    min-height:0;
+    aspect-ratio:16/10;
+  }
+
+  .work-showcase-controls{
+    align-items:flex-end;
+  }
+
+  .work-showcase-thumb{
+    flex-basis:60px;
+    width:60px;
+  }
+
+}
+
 /* OJT photo: enlarge badge + hint */
 
 .ojt-hint{
@@ -998,6 +1356,68 @@ textarea:focus{
   opacity:.85;
 }
 
+/* TIC-TAC-TOE */
+
+.game-wrap{
+  max-width:420px;
+}
+
+.game-status{
+  min-height:1.6em;
+  margin-bottom:18px;
+  color:var(--muted);
+}
+
+.game-board{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  width:min(100%,360px);
+  aspect-ratio:1;
+}
+
+.game-cell{
+  display:grid;
+  place-items:center;
+  aspect-ratio:1;
+  border:1px solid var(--line);
+  background:var(--accent-soft);
+  color:var(--accent);
+  font-family:'Fraunces',Georgia,serif;
+  font-size:clamp(2.5rem,12vw,4rem);
+  cursor:pointer;
+  transition:background .18s ease, transform .18s ease;
+}
+
+.game-cell:hover:enabled{
+  background:color-mix(in srgb, var(--accent-soft) 72%, var(--accent));
+  transform:translateY(-2px);
+}
+
+.game-cell:disabled{
+  cursor:default;
+}
+
+.game-cell.winner{
+  background:var(--accent);
+  color:var(--paper);
+}
+
+.game-reset{
+  margin-top:20px;
+  padding:10px 16px;
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--ink);
+  font:inherit;
+  cursor:pointer;
+}
+
+.game-reset:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
 footer{
   padding:36px 0;
   text-align:center;
@@ -1029,6 +1449,7 @@ footer{
       <a href="#ojt">OJT</a>
       <a href="#projects">Projects</a>
       <a href="#figma">Figma</a>
+      <a href="#play">Play</a>
       <a href="#contact">Contact</a>
 
       <button
@@ -1106,7 +1527,14 @@ footer{
 
   <div class="wrap about-grid">
 
-    <div class="avatar">
+    <div class="avatar" id="portraitStage">
+
+      <canvas
+        id="portraitCanvas"
+        role="img"
+        tabindex="0"
+        aria-label="Interactive 3D portrait of Denniel Estira">
+      </canvas>
 
       <img
         src="./photos/mygrad.png"
@@ -1214,9 +1642,37 @@ footer{
 
     </div>
 
-    <div
-      class="skillset-list"
-      id="skillList">
+    <div class="skill-explorer">
+
+      <div
+        class="skillset-list"
+        id="skillList"
+        role="group"
+        aria-label="Choose a technical skill">
+      </div>
+
+      <div class="skill-panel" aria-live="polite">
+
+        <div class="skill-category" id="skillCategory"></div>
+
+        <div class="skill-score">
+          <h3 id="selectedSkill"></h3>
+          <span class="value" id="selectedPct"></span>
+        </div>
+
+        <div
+          class="skill-meter"
+          id="skillProgress"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100">
+          <div class="skill-meter-fill" id="skillFill"></div>
+        </div>
+
+        <p class="skill-note" id="skillNote"></p>
+
+      </div>
+
     </div>
 
   </div>
@@ -1275,7 +1731,7 @@ footer{
     </p>
 
     <div
-      class="card-grid"
+      class="work-showcase project-showcase"
       id="projectGrid">
     </div>
 
@@ -1307,9 +1763,48 @@ footer{
     </p>
 
     <div
-      class="card-grid"
+      class="work-showcase figma-showcase"
       id="figmaGrid">
     </div>
+
+  </div>
+
+</section>
+
+
+<!-- TIC-TAC-TOE -->
+
+<section id="play">
+
+  <div class="wrap game-wrap">
+
+    <div class="head">
+
+      <h2>Quick play</h2>
+
+      <span class="num">You vs computer</span>
+
+    </div>
+
+    <p class="game-status" id="gameStatus" aria-live="polite">
+      Your turn (X)
+    </p>
+
+    <div class="game-board" id="gameBoard" role="group" aria-label="Tic-tac-toe board">
+
+      <button class="game-cell" type="button" data-cell="0" aria-label="Row 1, column 1, empty"></button>
+      <button class="game-cell" type="button" data-cell="1" aria-label="Row 1, column 2, empty"></button>
+      <button class="game-cell" type="button" data-cell="2" aria-label="Row 1, column 3, empty"></button>
+      <button class="game-cell" type="button" data-cell="3" aria-label="Row 2, column 1, empty"></button>
+      <button class="game-cell" type="button" data-cell="4" aria-label="Row 2, column 2, empty"></button>
+      <button class="game-cell" type="button" data-cell="5" aria-label="Row 2, column 3, empty"></button>
+      <button class="game-cell" type="button" data-cell="6" aria-label="Row 3, column 1, empty"></button>
+      <button class="game-cell" type="button" data-cell="7" aria-label="Row 3, column 2, empty"></button>
+      <button class="game-cell" type="button" data-cell="8" aria-label="Row 3, column 3, empty"></button>
+
+    </div>
+
+    <button class="game-reset" id="gameReset" type="button">New game</button>
 
   </div>
 
@@ -1813,33 +2308,182 @@ typeStep();
    RENDER SKILLS
 ========================= */
 
+const skillProfiles = {
+  HTML: {
+    category:"Web structure",
+    detail:"Builds clear page structure with semantic markup."
+  },
+  CSS: {
+    category:"Visual systems",
+    detail:"Shapes responsive layouts, visual styles, and polished details."
+  },
+  Python: {
+    category:"Programming",
+    detail:"Supports backend logic, data handling, and scripting."
+  },
+  JavaScript: {
+    category:"Interaction",
+    detail:"Adds behavior and responsive features in the browser."
+  },
+  WordPress: {
+    category:"Content management",
+    detail:"Used to manage website content and build pages."
+  }
+};
+
+let skillsRevealed = false;
+
+
 function renderSkills(){
 
-  document.getElementById("skillList")
-    .innerHTML = skills.map(s => `
+  const list =
+    document.getElementById("skillList");
 
-      <div class="skill-row">
+  const category =
+    document.getElementById("skillCategory");
 
-        <div class="name">
-          ${s.name}
-        </div>
+  const title =
+    document.getElementById("selectedSkill");
 
-        <div class="track">
+  const value =
+    document.getElementById("selectedPct");
 
-          <div
-            class="fill"
-            data-pct="${s.pct}">
-          </div>
+  const note =
+    document.getElementById("skillNote");
 
-        </div>
+  const progress =
+    document.getElementById("skillProgress");
 
-        <div class="pct">
-          ${s.pct}%
-        </div>
+  const fill =
+    document.getElementById("skillFill");
 
-      </div>
+  list.innerHTML = skills.map((skill, index) => `
 
-    `).join("");
+    <button
+      class="skill-row"
+      type="button"
+      data-skill-index="${index}"
+      aria-pressed="false">
+
+      <span class="skill-index">
+        ${String(index + 1).padStart(2, "0")}
+      </span>
+
+      <span class="name">
+        ${skill.name}
+      </span>
+
+      <span class="skill-arrow" aria-hidden="true">↗</span>
+
+    </button>
+
+  `).join("");
+
+
+  function selectSkill(index){
+
+    const skill = skills[index];
+    const profile = skillProfiles[skill.name] || {
+      category:"Technical skill",
+      detail:"A skill in Denniel's web development toolkit."
+    };
+
+    list.querySelectorAll(".skill-row")
+      .forEach((button, buttonIndex) => {
+        button.setAttribute(
+          "aria-pressed",
+          buttonIndex === index
+        );
+      });
+
+    category.textContent = profile.category;
+    title.textContent = skill.name;
+    value.textContent = `${skill.pct}%`;
+    note.textContent = profile.detail;
+    progress.setAttribute("aria-label", `${skill.name} proficiency`);
+    progress.setAttribute("aria-valuenow", skill.pct);
+    fill.dataset.pct = skill.pct;
+    fill.style.width = skillsRevealed
+      ? `${skill.pct}%`
+      : "0%";
+
+  }
+
+
+  list.addEventListener("click", (event) => {
+
+    const button =
+      event.target.closest(".skill-row");
+
+    if(button){
+      selectSkill(Number(button.dataset.skillIndex));
+    }
+
+  });
+
+
+  const section =
+    document.getElementById("skillsets");
+
+  let lastScrollIndex = -1;
+  let scrollFrame = 0;
+
+  function updateSkillFromScroll(){
+
+    scrollFrame = 0;
+
+    const scrollRange =
+      section.offsetHeight - window.innerHeight;
+
+    if(scrollRange <= 0){
+      return;
+    }
+
+    const sectionTop =
+      section.getBoundingClientRect().top + window.scrollY;
+
+    const progress = Math.max(
+      0,
+      Math.min(1, (window.scrollY - sectionTop) / scrollRange)
+    );
+
+    const index = Math.min(
+      skills.length - 1,
+      Math.floor(progress * skills.length)
+    );
+
+    if(index !== lastScrollIndex){
+      lastScrollIndex = index;
+      selectSkill(index);
+    }
+
+  }
+
+
+  function scheduleSkillUpdate(){
+
+    if(!scrollFrame){
+      scrollFrame = requestAnimationFrame(updateSkillFromScroll);
+    }
+
+  }
+
+
+  window.addEventListener(
+    "scroll",
+    scheduleSkillUpdate,
+    {passive:true}
+  );
+
+  window.addEventListener(
+    "resize",
+    scheduleSkillUpdate
+  );
+
+  scheduleSkillUpdate();
+
+
+  selectSkill(0);
 
 }
 
@@ -2017,140 +2661,152 @@ function renderGrid(containerId, items, type){
   const el =
     document.getElementById(containerId);
 
+  const label =
+    type === "figma" ? "design" : "project";
 
-  /* CREATE CARDS */
+  let currentIndex = 0;
+  let imageIndex = 0;
+  let imageSwapTimer;
 
-  el.innerHTML =
-    items.map((it, i) => `
+  el.innerHTML = `
 
-      <a
-        class="card"
-        href="detail.html?type=${type}&id=${it.id}"
-        aria-label="Open ${it.title}">
+    <div class="work-showcase-main">
 
-        <div class="thumb">
-
-          <img
-            class="card-slideshow"
-            src="${
-              it.images &&
-              it.images.length
-                ? it.images[0]
-                : ''
-            }"
-            alt="${it.title}"
-            loading="lazy">
-
-          <span class="thumb-cta">
-            ${type === "figma"
-              ? "View design"
-              : "View project"}
-          </span>
-
-        </div>
-
-
-        <div class="card-body">
-
-          <div class="card-index">
-
-            ${String(i + 1).padStart(2, '0')}
-            — ${it.tag}
-
-          </div>
-
-
-          <h3>
-            ${it.title}
-          </h3>
-
-
-          <p>
-            ${it.summary}
-          </p>
-
-          <span class="card-cta">
-            View details
-            <span class="arrow" aria-hidden="true">↗</span>
-          </span>
-
-        </div>
-
+      <a class="work-showcase-visual" href="#">
+        <img class="work-showcase-image" src="" alt="">
+        <span class="work-showcase-count"></span>
       </a>
 
-    `).join("");
+      <div class="work-showcase-copy">
+        <div class="work-showcase-meta"></div>
+        <h3></h3>
+        <p></p>
+        <a class="work-showcase-link" href="#">
+          <span>View details</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+    </div>
+
+    <div class="work-showcase-controls">
+
+      <div class="work-showcase-thumbs" role="group" aria-label="Choose a ${label}">
+        ${items.map((item, index) => `
+          <button
+            type="button"
+            class="work-showcase-thumb"
+            data-showcase-index="${index}"
+            aria-label="Show ${label} ${index + 1}: ${item.title}"
+            aria-pressed="false">
+            <img src="${item.images?.[0] || ""}" alt="" loading="lazy">
+            <span>${String(index + 1).padStart(2, "0")}</span>
+          </button>
+        `).join("")}
+      </div>
+
+      <div class="work-showcase-stepper">
+        <button
+          class="work-showcase-arrow"
+          type="button"
+          data-step="-1"
+          aria-label="Previous ${label}">←</button>
+        <span class="work-showcase-position" aria-live="polite"></span>
+        <button
+          class="work-showcase-arrow"
+          type="button"
+          data-step="1"
+          aria-label="Next ${label}">→</button>
+      </div>
+
+    </div>
+
+  `;
+
+  const image = el.querySelector(".work-showcase-image");
+  const visual = el.querySelector(".work-showcase-visual");
+  const meta = el.querySelector(".work-showcase-meta");
+  const title = el.querySelector(".work-showcase-copy h3");
+  const summary = el.querySelector(".work-showcase-copy p");
+  const detailLink = el.querySelector(".work-showcase-link");
+  const count = el.querySelector(".work-showcase-count");
+  const position = el.querySelector(".work-showcase-position");
 
 
-  /* AUTOMATIC SLIDESHOW */
+  function showItem(index){
 
-  items.forEach((it, i) => {
+    currentIndex = (index + items.length) % items.length;
+    imageIndex = 0;
 
-    /* No slideshow if there is only
-       one image */
+    const item = items[currentIndex];
+    const href = `detail.html?type=${type}&id=${item.id}`;
 
-    if(
-      !it.images ||
-      it.images.length <= 1
-    ){
+    clearTimeout(imageSwapTimer);
+    image.style.opacity = "1";
+    image.src = item.images?.[0] || "";
+    image.alt = item.title;
+    visual.href = href;
+    visual.setAttribute("aria-label", `Open ${item.title}`);
+    meta.textContent = item.tag;
+    title.textContent = item.title;
+    summary.textContent = item.summary;
+    detailLink.href = href;
+    detailLink.querySelector("span").textContent =
+      type === "figma" ? "View design details" : "View project details";
+    count.textContent = `${String(currentIndex + 1).padStart(2, "0")} / ${String(items.length).padStart(2, "0")}`;
+    position.textContent = count.textContent;
 
-      return;
+    el.querySelectorAll(".work-showcase-thumb")
+      .forEach((button, buttonIndex) => {
+        button.setAttribute(
+          "aria-pressed",
+          buttonIndex === currentIndex
+        );
+      });
 
+  }
+
+
+  el.addEventListener("click", (event) => {
+
+    const thumb = event.target.closest("[data-showcase-index]");
+    const step = event.target.closest("[data-step]");
+
+    if(thumb){
+      showItem(Number(thumb.dataset.showcaseIndex));
+    }else if(step){
+      showItem(currentIndex + Number(step.dataset.step));
     }
 
-
-    const card =
-      el.children[i];
+  });
 
 
-    if(!card){
+  showItem(0);
 
-      return;
-
-    }
-
-
-    const image =
-      card.querySelector(
-        ".card-slideshow"
-      );
-
-
-    if(!image){
-
-      return;
-
-    }
-
-
-    let current = 0;
-
+  if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){
 
     setInterval(() => {
 
-      current =
-        (current + 1) %
-        it.images.length;
+      const activeImages = items[currentIndex].images || [];
 
+      if(activeImages.length <= 1){
+        return;
+      }
 
-      image.style.opacity =
-        "0";
+      imageIndex = (imageIndex + 1) % activeImages.length;
+      const nextImage = imageIndex;
+      image.style.opacity = "0";
 
+      imageSwapTimer = setTimeout(() => {
 
-      setTimeout(() => {
-
-        image.src =
-          it.images[current];
-
-
-        image.style.opacity =
-          "1";
+        image.src = activeImages[nextImage];
+        image.style.opacity = "1";
 
       }, 250);
 
+    }, 3600);
 
-    }, 3000);
-
-  });
+  }
 
 }
 
@@ -2191,14 +2847,15 @@ const io =
 
         if(e.isIntersecting){
 
-          e.target
-            .querySelectorAll(".fill")
-            .forEach(f => {
+          skillsRevealed = true;
 
-              f.style.width =
-                f.dataset.pct + "%";
+          const fill =
+            e.target.querySelector("#skillFill");
 
-            });
+          if(fill){
+            fill.style.width =
+              fill.dataset.pct + "%";
+          }
 
 
           io.unobserve(e.target);
@@ -2217,10 +2874,440 @@ const io =
 
 
 document
-  .querySelectorAll(".skillset-list")
-  .forEach(s =>
-    io.observe(s)
+  .querySelectorAll("#skillsets")
+  .forEach(section =>
+    io.observe(section)
   );
+
+
+/* =========================
+   TIC-TAC-TOE
+========================= */
+
+const gameBoard =
+  document.getElementById("gameBoard");
+
+const gameStatus =
+  document.getElementById("gameStatus");
+
+const gameCells =
+  [...gameBoard.querySelectorAll(".game-cell")];
+
+const winLines = [
+  [0, 1, 2], [3, 4, 5], [6, 7, 8],
+  [0, 3, 6], [1, 4, 7], [2, 5, 8],
+  [0, 4, 8], [2, 4, 6]
+];
+
+let gameState = Array(9).fill("");
+let gameFinished = false;
+let computerThinking = false;
+let computerTimer;
+let restartTimer;
+let humanMark = "X";
+let computerMark = "O";
+let nextStarter = "computer";
+
+
+function getWinner(board){
+
+  return winLines.find(line =>
+    line.every(position => board[position] && board[position] === board[line[0]])
+  );
+
+}
+
+
+function scoreBoard(board, depth){
+
+  const winner = getWinner(board);
+
+  if(winner){
+    return board[winner[0]] === computerMark
+      ? 10 - depth
+      : depth - 10;
+  }
+
+  return board.every(Boolean) ? 0 : null;
+
+}
+
+
+function findBestMove(board){
+
+  let bestScore = -Infinity;
+  let bestMove = -1;
+
+  board.forEach((value, index) => {
+
+    if(value){
+      return;
+    }
+
+    board[index] = computerMark;
+    const score = minimax(board, false, 1);
+    board[index] = "";
+
+    if(score > bestScore){
+      bestScore = score;
+      bestMove = index;
+    }
+
+  });
+
+  return bestMove;
+
+}
+
+
+function minimax(board, computerTurn, depth){
+
+  const result = scoreBoard(board, depth);
+
+  if(result !== null){
+    return result;
+  }
+
+  let bestScore = computerTurn ? -Infinity : Infinity;
+
+  board.forEach((value, index) => {
+
+    if(value){
+      return;
+    }
+
+    board[index] = computerTurn ? computerMark : humanMark;
+    const score = minimax(board, !computerTurn, depth + 1);
+    board[index] = "";
+
+    bestScore = computerTurn
+      ? Math.max(bestScore, score)
+      : Math.min(bestScore, score);
+
+  });
+
+  return bestScore;
+
+}
+
+
+function placeMark(index, player){
+
+  gameState[index] = player;
+  gameCells[index].textContent = player;
+  gameCells[index].setAttribute(
+    "aria-label",
+    `Row ${Math.floor(index / 3) + 1}, column ${index % 3 + 1}, ${player}`
+  );
+
+  const winningLine = getWinner(gameState);
+
+  if(winningLine){
+
+    gameFinished = true;
+    winningLine.forEach(position =>
+      gameCells[position].classList.add("winner")
+    );
+    gameCells.forEach(button => button.disabled = true);
+    gameStatus.textContent = player === humanMark
+      ? "You win!"
+      : "Computer wins!";
+    restartTimer = setTimeout(resetGame, 2000);
+    return true;
+
+  }
+
+  if(gameState.every(Boolean)){
+
+    gameFinished = true;
+    gameCells.forEach(button => button.disabled = true);
+    gameStatus.textContent = "It's a draw!";
+    restartTimer = setTimeout(resetGame, 2000);
+    return true;
+
+  }
+
+  return false;
+
+}
+
+
+function resetGame(){
+
+  clearTimeout(computerTimer);
+  clearTimeout(restartTimer);
+  gameState = Array(9).fill("");
+  gameFinished = false;
+  computerThinking = false;
+
+  const computerStarts =
+    nextStarter === "computer";
+
+  nextStarter = computerStarts
+    ? "human"
+    : "computer";
+
+  humanMark = computerStarts ? "O" : "X";
+  computerMark = computerStarts ? "X" : "O";
+
+  gameCells.forEach((cell, index) => {
+
+    cell.textContent = "";
+    cell.disabled = false;
+    cell.classList.remove("winner");
+    cell.setAttribute(
+      "aria-label",
+      `Row ${Math.floor(index / 3) + 1}, column ${index % 3 + 1}, empty`
+    );
+
+  });
+
+  gameStatus.textContent = computerStarts
+    ? `Computer starts (${computerMark})...`
+    : `Your turn (${humanMark})`;
+
+  if(computerStarts){
+
+    computerThinking = true;
+    gameCells.forEach(cell => cell.disabled = true);
+    computerTimer = setTimeout(playComputerTurn, 350);
+
+  }
+
+}
+
+
+function playComputerTurn(){
+
+  computerThinking = false;
+  placeMark(findBestMove(gameState), computerMark);
+
+  if(!gameFinished){
+
+    gameCells.forEach((button, position) => {
+      button.disabled = Boolean(gameState[position]);
+    });
+    gameStatus.textContent = `Your turn (${humanMark})`;
+
+  }
+
+}
+
+
+gameBoard.addEventListener("click", (event) => {
+
+  const cell = event.target.closest(".game-cell");
+
+  if(!cell || gameFinished || computerThinking){
+    return;
+  }
+
+  const index = Number(cell.dataset.cell);
+
+  if(gameState[index]){
+    return;
+  }
+
+  if(placeMark(index, humanMark)){
+    return;
+  }
+
+  computerThinking = true;
+  gameCells.forEach(button => button.disabled = true);
+  gameStatus.textContent = `Computer thinking (${computerMark})...`;
+  computerTimer = setTimeout(playComputerTurn, 350);
+
+});
+
+
+document
+  .getElementById("gameReset")
+  .addEventListener("click", resetGame);
+
+</script>
+
+
+<script type="module">
+
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
+
+const stage = document.getElementById("portraitStage");
+const canvas = document.getElementById("portraitCanvas");
+const fallbackImage = stage.querySelector("img");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+try{
+
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    alpha:true,
+    antialias:true,
+    preserveDrawingBuffer:true
+  });
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+  camera.position.z = 7;
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x20302d, 2.1));
+
+  const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
+  keyLight.position.set(-3, 4, 6);
+  scene.add(keyLight);
+
+  const cardGroup = new THREE.Group();
+  scene.add(cardGroup);
+
+  let card;
+  let targetX = 0;
+  let targetY = 0;
+  let dragging = false;
+
+  function render(){
+
+    if(card){
+      cardGroup.rotation.x += (targetX - cardGroup.rotation.x) * 0.12;
+      cardGroup.rotation.y += (targetY - cardGroup.rotation.y) * 0.12;
+    }
+
+    renderer.render(scene, camera);
+
+  }
+
+  function resize(){
+
+    const width = stage.clientWidth;
+    const height = stage.clientHeight;
+
+    if(!width || !height){
+      return;
+    }
+
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    render();
+
+  }
+
+  new THREE.TextureLoader().load(
+    fallbackImage.src,
+    (texture) => {
+
+      texture.colorSpace = THREE.SRGBColorSpace;
+
+      const aspect = texture.image.width / texture.image.height;
+      const cardHeight = 3.4;
+      const cardWidth = cardHeight * aspect;
+      const edgeMaterial = new THREE.MeshStandardMaterial({
+        color:0x243a36,
+        roughness:0.72,
+        metalness:0.12
+      });
+      const frontMaterial = new THREE.MeshStandardMaterial({
+        map:texture,
+        roughness:0.72
+      });
+
+      card = new THREE.Mesh(
+        new THREE.BoxGeometry(cardWidth, cardHeight, 0.09),
+        [edgeMaterial, edgeMaterial, edgeMaterial, edgeMaterial, frontMaterial, edgeMaterial]
+      );
+      cardGroup.add(card);
+      stage.classList.add("is-ready");
+      resize();
+
+    },
+    undefined,
+    error => console.warn("3D portrait unavailable; showing the photo fallback.", error)
+  );
+
+  stage.addEventListener("pointermove", (event) => {
+
+    const bounds = stage.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width * 2 - 1;
+    const y = (event.clientY - bounds.top) / bounds.height * 2 - 1;
+    targetX = y * 0.3;
+    targetY = x * 0.42;
+    render();
+
+  });
+
+  stage.addEventListener("pointerdown", (event) => {
+
+    dragging = true;
+    stage.setPointerCapture(event.pointerId);
+
+  });
+
+  stage.addEventListener("pointerup", () => {
+
+    dragging = false;
+    targetX = 0;
+    targetY = 0;
+
+  });
+
+  stage.addEventListener("pointercancel", () => {
+
+    dragging = false;
+    targetX = 0;
+    targetY = 0;
+
+  });
+
+  stage.addEventListener("pointerleave", () => {
+
+    if(!dragging){
+      targetX = 0;
+      targetY = 0;
+    }
+
+  });
+
+  canvas.addEventListener("keydown", (event) => {
+
+    const step = 0.12;
+
+    if(event.key === "ArrowLeft") targetY -= step;
+    else if(event.key === "ArrowRight") targetY += step;
+    else if(event.key === "ArrowUp") targetX -= step;
+    else if(event.key === "ArrowDown") targetX += step;
+    else return;
+
+    event.preventDefault();
+    targetX = THREE.MathUtils.clamp(targetX, -0.45, 0.45);
+    targetY = THREE.MathUtils.clamp(targetY, -0.55, 0.55);
+    render();
+
+  });
+
+  new ResizeObserver(resize).observe(stage);
+
+  if(!reducedMotion){
+
+    const animate = () => {
+
+      if(!dragging && !stage.matches(":hover")){
+        targetY = Math.sin(performance.now() * 0.00045) * 0.06;
+      }
+
+      render();
+      requestAnimationFrame(animate);
+
+    };
+
+    animate();
+
+  }
+
+}catch(error){
+
+  console.warn("3D portrait unavailable; showing the photo fallback.", error);
+
+}
 
 </script>
 
