@@ -33,6 +33,24 @@
   --accent-soft:#1D2A28;
 }
 
+:root[data-style="robotic"][data-theme="light"]{
+  --paper:#EAF1F3;
+  --ink:#172A33;
+  --muted:#60757D;
+  --line:#C2D1D5;
+  --accent:#087F72;
+  --accent-soft:#D8E7E9;
+}
+
+:root[data-style="robotic"][data-theme="dark"]{
+  --paper:#101820;
+  --ink:#D9E7ED;
+  --muted:#91A7B0;
+  --line:#29414B;
+  --accent:#52E0C4;
+  --accent-soft:#172A34;
+}
+
 html{
   scroll-padding-top:70px;
   scroll-behavior:smooth;
@@ -180,6 +198,18 @@ nav{
   justify-content:center;
 }
 
+.appearance-controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.robotic-toggle[aria-pressed="true"]{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  color:var(--accent);
+}
+
 .burger{
   display:none;
   flex-direction:column;
@@ -277,8 +307,11 @@ body.menu-open{
     color:var(--accent);
   }
 
-  .navlinks .theme-toggle{
+  .navlinks .appearance-controls{
     margin-top:8px;
+  }
+
+  .navlinks .theme-toggle{
     background:var(--paper);
   }
 
@@ -1434,6 +1467,38 @@ footer{
   min-height:auto;
 }
 
+:root[data-style="robotic"] body{
+  font-family:"Courier New",monospace;
+  letter-spacing:.01em;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--accent) 7%, transparent) 1px,transparent 1px),
+    linear-gradient(90deg,color-mix(in srgb, var(--accent) 7%, transparent) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+
+:root:not([data-style="robotic"]) body{
+  background-image:none;
+}
+
+:root[data-style="robotic"] h1,
+:root[data-style="robotic"] h2,
+:root[data-style="robotic"] h3,
+:root[data-style="robotic"] .serif,
+:root[data-style="robotic"] .navrow .mark,
+:root[data-style="robotic"] .skill-score .value,
+:root[data-style="robotic"] .game-cell{
+  font-family:"Courier New",monospace;
+  letter-spacing:0;
+}
+
+:root[data-style="robotic"] *{
+  border-radius:0 !important;
+}
+
+:root[data-style="robotic"] .theme-toggle{
+  border-radius:100px !important;
+}
+
 </style>
 </head>
 
@@ -1460,12 +1525,25 @@ footer{
       <a href="#play">Play</a>
       <a href="#contact">Contact</a>
 
-      <button
-        class="theme-toggle"
-        id="themeToggle"
-        aria-label="Toggle dark mode">
-        ☾
-      </button>
+      <div class="appearance-controls" aria-label="Appearance settings">
+        <button
+          type="button"
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Switch to dark mode"
+          title="Switch to dark mode">
+          ☾
+        </button>
+        <button
+          type="button"
+          class="theme-toggle robotic-toggle"
+          id="roboticToggle"
+          aria-label="Enable robotic style"
+          aria-pressed="false"
+          title="Enable robotic style">
+          ▦
+        </button>
+      </div>
 
     </div>
 
@@ -2146,53 +2224,82 @@ window
 
 
 /* =========================
-   DARK / LIGHT MODE
+   APPEARANCE MODES
 ========================= */
 
 const themeBtn =
   document.getElementById("themeToggle");
 
+const roboticBtn =
+  document.getElementById("roboticToggle");
+
 
 function applyTheme(t){
-
   document.documentElement
-    .setAttribute(
-      "data-theme",
-      t
-    );
+    .setAttribute("data-theme", t);
 
-  themeBtn.textContent =
-    t === "dark"
-      ? "☀"
-      : "☾";
+  const nextTheme = t === "dark" ? "light" : "dark";
+  themeBtn.textContent = nextTheme === "dark" ? "☾" : "☀";
 
+  themeBtn.setAttribute(
+    "aria-label",
+    `Switch to ${nextTheme} mode`
+  );
+
+  themeBtn.title = `Switch to ${nextTheme} mode`;
 }
 
+function applyStyle(style){
+  document.documentElement.setAttribute("data-style", style);
+  const isRobotic = style === "robotic";
 
-applyTheme(
+  roboticBtn.setAttribute("aria-pressed", isRobotic);
+  roboticBtn.setAttribute(
+    "aria-label",
+    `${isRobotic ? "Disable" : "Enable"} robotic style`
+  );
+  roboticBtn.title = `${isRobotic ? "Disable" : "Enable"} robotic style`;
+}
 
-  window.matchMedia(
-    "(prefers-color-scheme: dark)"
-  ).matches
-
+const savedTheme =
+  localStorage.getItem("portfolio-theme");
+const savedStyle =
+  localStorage.getItem("portfolio-style");
+const systemTheme =
+  window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
-    : "light"
+    : "light";
+const initialTheme =
+  savedTheme === "dark" || savedTheme === "light"
+    ? savedTheme
+    : systemTheme;
+const initialStyle =
+  savedStyle === "robotic" || savedStyle === "classic"
+    ? savedStyle
+    : savedTheme === "robotic"
+      ? "robotic"
+      : "classic";
 
-);
+applyTheme(initialTheme);
+applyStyle(initialStyle);
 
 
 themeBtn.addEventListener("click", () => {
-
   const cur =
-    document.documentElement
-      .getAttribute("data-theme");
+    document.documentElement.getAttribute("data-theme");
+  const next = cur === "dark" ? "light" : "dark";
 
-  applyTheme(
-    cur === "dark"
-      ? "light"
-      : "dark"
-  );
+  applyTheme(next);
+  localStorage.setItem("portfolio-theme", next);
+});
 
+roboticBtn.addEventListener("click", () => {
+  const currentStyle =
+    document.documentElement.getAttribute("data-style");
+  const nextStyle = currentStyle === "robotic" ? "classic" : "robotic";
+
+  applyStyle(nextStyle);
+  localStorage.setItem("portfolio-style", nextStyle);
 });
 
 
