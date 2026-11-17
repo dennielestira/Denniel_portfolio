@@ -1900,7 +1900,7 @@ footer{
 
 <!-- SHARED DATA -->
 
-<script src="./data.js"></script>
+<script src="./data.js?v=2"></script>
 
 
 <script>
@@ -2309,12 +2309,32 @@ function renderSkills(){
   const list =
     document.getElementById("skillList");
 
-  list.innerHTML = skills.map(skill => `
-    <li class="skill-row">
-      <span class="skill-mark" aria-hidden="true">${skill.icon}</span>
-      <span class="skill-name">${skill.name}</span>
-    </li>
-  `).join("");
+  const skillIcons = {
+    HTML:"5",
+    CSS:"#",
+    JavaScript:"JS",
+    Python:"Py",
+    PHP:"php",
+    SQL:"DB",
+    Django:"dj",
+    WordPress:"W"
+  };
+
+  list.innerHTML = skills.map(skill => {
+    const name =
+      typeof skill === "string" ? skill : skill.name;
+    const icon =
+      (typeof skill === "string" ? "" : skill.icon) ||
+      skillIcons[name] ||
+      name.slice(0, 2);
+
+    return `
+      <li class="skill-row">
+        <span class="skill-mark" aria-hidden="true">${icon}</span>
+        <span class="skill-name">${name}</span>
+      </li>
+    `;
+  }).join("");
 
 }
 
