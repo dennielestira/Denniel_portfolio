@@ -572,159 +572,66 @@ section,
 /* SKILLS */
 
 #skillsets{
-  min-height:180vh;
-  min-height:180dvh;
-  padding:0;
-  justify-content:flex-start;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--paper) 92%, transparent),
-      var(--paper) 70%
-    ),
-    url('./photos/bg.jpg') center/cover no-repeat;
+  background:var(--paper);
 }
 
-#skillsets .wrap{
-  position:sticky;
-  top:70px;
-  min-height:calc(100vh - 70px);
-  min-height:calc(100dvh - 70px);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding-top:32px;
-  padding-bottom:32px;
+#skillsets .head{
+  margin-bottom:14px;
 }
 
-.skill-explorer{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(260px,.9fr);
-  gap:44px;
-  align-items:stretch;
+.skills-intro{
+  max-width:68ch;
+  margin-bottom:30px;
+  color:var(--muted);
+  font-size:1.05rem;
+  line-height:1.55;
 }
 
 .skillset-list{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  column-gap:28px;
   border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
+  list-style:none;
 }
 
 .skill-row{
-  width:100%;
-  display:grid;
-  grid-template-columns:40px 1fr 20px;
+  display:flex;
   align-items:center;
   gap:12px;
-  padding:16px 12px;
-  border:0;
-  border-top:1px solid var(--line);
-  background:transparent;
-  color:var(--ink);
-  font:inherit;
-  text-align:left;
-  cursor:pointer;
-  transition:background .2s ease, padding .2s ease;
+  min-width:0;
+  padding:15px 0;
+  border-bottom:1px solid var(--line);
 }
 
-.skill-row:first-child{
-  border-top:0;
-}
-
-.skill-row:hover,
-.skill-row[aria-pressed="true"]{
+.skill-mark{
+  width:32px;
+  height:32px;
+  flex:0 0 32px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--line);
+  border-radius:4px;
   background:var(--accent-soft);
-  padding-left:18px;
+  color:var(--accent);
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  font-size:.68rem;
+  font-weight:600;
+  letter-spacing:-.03em;
 }
 
-.skill-index{
-  color:var(--muted);
-  font-size:.78rem;
-}
-
-.skill-row .name{
+.skill-name{
+  min-width:0;
+  color:var(--ink);
   font-size:1rem;
-}
-
-.skill-arrow{
-  color:var(--accent);
-  opacity:.45;
-  transition:opacity .2s ease, transform .2s ease;
-}
-
-.skill-row:hover .skill-arrow,
-.skill-row[aria-pressed="true"] .skill-arrow{
-  opacity:1;
-  transform:translateX(3px);
-}
-
-.skill-panel{
-  min-height:300px;
-  padding:12px 0 12px 38px;
-  border-left:1px solid var(--line);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-.skill-category{
-  color:var(--accent);
-  font-size:.82rem;
-}
-
-.skill-score{
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  gap:12px;
-  margin:10px 0 18px;
-}
-
-.skill-score h3{
-  font-size:2rem;
-  line-height:1.15;
   overflow-wrap:anywhere;
 }
 
-.skill-score .value{
-  color:var(--accent);
-  font-family:'Fraunces',Georgia,serif;
-  font-size:3rem;
-  line-height:1;
-}
-
-.skill-meter{
-  height:4px;
-  background:var(--line);
-}
-
-.skill-meter-fill{
-  width:0;
-  height:100%;
-  background:var(--accent);
-  transition:width .7s cubic-bezier(.2,.7,.2,1);
-}
-
-.skill-note{
-  max-width:36ch;
-  margin-top:20px;
-  color:var(--muted);
-  font-size:.95rem;
-}
-
-@media (max-width:640px){
-
-  .skill-explorer{
-    grid-template-columns:1fr;
-    gap:28px;
+@media (max-width:700px){
+  .skillset-list{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px 14px;
   }
-
-  .skill-panel{
-    min-height:0;
-    padding:24px 0 0;
-    border-left:0;
-    border-top:1px solid var(--line);
-  }
-
 }
 
 /* OJT EXPERIENCE */
@@ -1485,7 +1392,6 @@ footer{
 :root[data-style="robotic"] h3,
 :root[data-style="robotic"] .serif,
 :root[data-style="robotic"] .navrow .mark,
-:root[data-style="robotic"] .skill-score .value,
 :root[data-style="robotic"] .game-cell{
   font-family:"Courier New",monospace;
   letter-spacing:0;
@@ -1591,6 +1497,8 @@ footer{
       <span>CSS</span>
       <span>JavaScript</span>
       <span>Python</span>
+      <span>PHP</span>
+      <span>SQL</span>
       <span>Django</span>
 
     </div>
@@ -1638,7 +1546,7 @@ footer{
         I'm a Bachelor of Science in Information Technology (BSIT)
         graduate from Cavite State University – Bacoor. I have
         developed practical skills in web development using HTML,
-        CSS, JavaScript, Python, and Django, with experience building
+        CSS, JavaScript, Python, PHP, SQL, and Django, with experience building
         functional web-based applications. I also have basic knowledge
         of computer troubleshooting and hardware maintenance, including
         diagnosing and resolving common computer-related issues.
@@ -1728,38 +1636,11 @@ footer{
 
     </div>
 
-    <div class="skill-explorer">
+    <p class="skills-intro">
+      A selection of languages and tools I use to build websites and applications.
+    </p>
 
-      <div
-        class="skillset-list"
-        id="skillList"
-        role="group"
-        aria-label="Choose a technical skill">
-      </div>
-
-      <div class="skill-panel" aria-live="polite">
-
-        <div class="skill-category" id="skillCategory"></div>
-
-        <div class="skill-score">
-          <h3 id="selectedSkill"></h3>
-          <span class="value" id="selectedPct"></span>
-        </div>
-
-        <div
-          class="skill-meter"
-          id="skillProgress"
-          role="progressbar"
-          aria-valuemin="0"
-          aria-valuemax="100">
-          <div class="skill-meter-fill" id="skillFill"></div>
-        </div>
-
-        <p class="skill-note" id="skillNote"></p>
-
-      </div>
-
-    </div>
+    <ul class="skillset-list" id="skillList" aria-label="Technical skills"></ul>
 
   </div>
 
@@ -2423,182 +2304,17 @@ typeStep();
    RENDER SKILLS
 ========================= */
 
-const skillProfiles = {
-  HTML: {
-    category:"Web structure",
-    detail:"Builds clear page structure with semantic markup."
-  },
-  CSS: {
-    category:"Visual systems",
-    detail:"Shapes responsive layouts, visual styles, and polished details."
-  },
-  Python: {
-    category:"Programming",
-    detail:"Supports backend logic, data handling, and scripting."
-  },
-  JavaScript: {
-    category:"Interaction",
-    detail:"Adds behavior and responsive features in the browser."
-  },
-  WordPress: {
-    category:"Content management",
-    detail:"Used to manage website content and build pages."
-  }
-};
-
-let skillsRevealed = false;
-
-
 function renderSkills(){
 
   const list =
     document.getElementById("skillList");
 
-  const category =
-    document.getElementById("skillCategory");
-
-  const title =
-    document.getElementById("selectedSkill");
-
-  const value =
-    document.getElementById("selectedPct");
-
-  const note =
-    document.getElementById("skillNote");
-
-  const progress =
-    document.getElementById("skillProgress");
-
-  const fill =
-    document.getElementById("skillFill");
-
-  list.innerHTML = skills.map((skill, index) => `
-
-    <button
-      class="skill-row"
-      type="button"
-      data-skill-index="${index}"
-      aria-pressed="false">
-
-      <span class="skill-index">
-        ${String(index + 1).padStart(2, "0")}
-      </span>
-
-      <span class="name">
-        ${skill.name}
-      </span>
-
-      <span class="skill-arrow" aria-hidden="true">↗</span>
-
-    </button>
-
+  list.innerHTML = skills.map(skill => `
+    <li class="skill-row">
+      <span class="skill-mark" aria-hidden="true">${skill.icon}</span>
+      <span class="skill-name">${skill.name}</span>
+    </li>
   `).join("");
-
-
-  function selectSkill(index){
-
-    const skill = skills[index];
-    const profile = skillProfiles[skill.name] || {
-      category:"Technical skill",
-      detail:"A skill in Denniel's web development toolkit."
-    };
-
-    list.querySelectorAll(".skill-row")
-      .forEach((button, buttonIndex) => {
-        button.setAttribute(
-          "aria-pressed",
-          buttonIndex === index
-        );
-      });
-
-    category.textContent = profile.category;
-    title.textContent = skill.name;
-    value.textContent = `${skill.pct}%`;
-    note.textContent = profile.detail;
-    progress.setAttribute("aria-label", `${skill.name} proficiency`);
-    progress.setAttribute("aria-valuenow", skill.pct);
-    fill.dataset.pct = skill.pct;
-    fill.style.width = skillsRevealed
-      ? `${skill.pct}%`
-      : "0%";
-
-  }
-
-
-  list.addEventListener("click", (event) => {
-
-    const button =
-      event.target.closest(".skill-row");
-
-    if(button){
-      selectSkill(Number(button.dataset.skillIndex));
-    }
-
-  });
-
-
-  const section =
-    document.getElementById("skillsets");
-
-  let lastScrollIndex = -1;
-  let scrollFrame = 0;
-
-  function updateSkillFromScroll(){
-
-    scrollFrame = 0;
-
-    const scrollRange =
-      section.offsetHeight - window.innerHeight;
-
-    if(scrollRange <= 0){
-      return;
-    }
-
-    const sectionTop =
-      section.getBoundingClientRect().top + window.scrollY;
-
-    const progress = Math.max(
-      0,
-      Math.min(1, (window.scrollY - sectionTop) / scrollRange)
-    );
-
-    const index = Math.min(
-      skills.length - 1,
-      Math.floor(progress * skills.length)
-    );
-
-    if(index !== lastScrollIndex){
-      lastScrollIndex = index;
-      selectSkill(index);
-    }
-
-  }
-
-
-  function scheduleSkillUpdate(){
-
-    if(!scrollFrame){
-      scrollFrame = requestAnimationFrame(updateSkillFromScroll);
-    }
-
-  }
-
-
-  window.addEventListener(
-    "scroll",
-    scheduleSkillUpdate,
-    {passive:true}
-  );
-
-  window.addEventListener(
-    "resize",
-    scheduleSkillUpdate
-  );
-
-  scheduleSkillUpdate();
-
-
-  selectSkill(0);
 
 }
 
@@ -2947,52 +2663,6 @@ renderGrid(
   figma,
   "figma"
 );
-
-
-/* =========================
-   SKILL BAR ANIMATION
-========================= */
-
-const io =
-  new IntersectionObserver(
-
-    (entries) => {
-
-      entries.forEach(e => {
-
-        if(e.isIntersecting){
-
-          skillsRevealed = true;
-
-          const fill =
-            e.target.querySelector("#skillFill");
-
-          if(fill){
-            fill.style.width =
-              fill.dataset.pct + "%";
-          }
-
-
-          io.unobserve(e.target);
-
-        }
-
-      });
-
-    },
-
-    {
-      threshold:.3
-    }
-
-  );
-
-
-document
-  .querySelectorAll("#skillsets")
-  .forEach(section =>
-    io.observe(section)
-  );
 
 
 /* =========================

@@ -1,11 +1,14 @@
 /* ---------- SHARED SITE DATA ---------- */
 /* Used by both index.html and detail.html so project/Figma info stays in one place. */
 const skills = [
-  {name:"HTML", pct:85},
-  {name:"CSS", pct:80},
-  {name:"Python", pct:65},
-  {name:"JavaScript", pct:60},
-  {name:"WordPress", pct:80},
+  {name:"HTML", icon:"5"},
+  {name:"CSS", icon:"#"},
+  {name:"JavaScript", icon:"JS"},
+  {name:"Python", icon:"Py"},
+  {name:"PHP", icon:"php"},
+  {name:"SQL", icon:"DB"},
+  {name:"Django", icon:"dj"},
+  {name:"WordPress", icon:"W"},
 ];
 
 const projects = [
